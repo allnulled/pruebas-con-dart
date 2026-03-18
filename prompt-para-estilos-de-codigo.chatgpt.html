@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>PERFIL DE ESTILO DE C&Oacute;DIGO &ndash; CONSOLIDADO</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <p>Perfecto. Aquí tienes <strong>tu perfil completo de estilo de código</strong>, consolidado en un solo bloque. Puedes copiar-pegarlo como referencia para cualquier función, clase o utilidad que generemos.</p>
+<hr>
+<h1 id="perfil-de-estilo-de-código--consolidado">PERFIL DE ESTILO DE CÓDIGO – CONSOLIDADO</h1>
+<h2 id="formato-de-respuesta">FORMATO DE RESPUESTA</h2>
+<ul>
+<li>Siempre que haya <strong>código</strong>, usar bloques <code> </code>.</li>
+<li><strong>Código primero, explicación después</strong>.</li>
+<li><strong>Más código y menos texto</strong>.</li>
+<li>Dar <strong>una sola solución</strong>, no varias alternativas.</li>
+</ul>
+<h2 id="iteración-y-estructuras">ITERACIÓN Y ESTRUCTURAS</h2>
+<ul>
+<li>Evitar: <code>filter</code>, <code>map</code>, <code>reduce</code>, <code>forEach</code>.</li>
+<li>Usar <strong>un solo <code>for</code></strong> que haga todo.</li>
+<li>No usar <code>for...of</code> ni <code>for...in</code>.</li>
+<li>Para iterar objetos:</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(obj);
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; keys.<span class="hljs-property">length</span>; i++) {
+  <span class="hljs-keyword">const</span> key = keys[i];
+  <span class="hljs-keyword">const</span> value = obj[key];
+}
+</code></pre>
+<h2 id="estilo-javascript">ESTILO JAVASCRIPT</h2>
+<ul>
+<li><strong>Preferir mutabilidad</strong> cuando tenga sentido.</li>
+<li>Usar <strong>variables temporales explícitas</strong>.</li>
+<li><strong>Evitar magia de JS</strong>: comparaciones implícitas, coerciones raras.</li>
+<li><strong>Comparaciones explícitas</strong>.</li>
+<li><strong>Destructuring permitido</strong> si ahorra líneas.</li>
+<li>Preferir <strong>clases</strong> sobre factories.</li>
+<li>Evitar <code>async/await</code> si no es necesario.</li>
+</ul>
+<h2 id="funciones-y-métodos">FUNCIONES Y MÉTODOS</h2>
+<ul>
+<li>Declarar <strong>variables cerca del uso</strong>.</li>
+<li>Preferir <strong>funciones relativamente grandes</strong>, no hiperfragmentar.</li>
+<li>Usar <strong>métodos estáticos</strong> cuando no hay estado.</li>
+<li>Preferir <strong>objetos config</strong> en lugar de múltiples argumentos posicionales.</li>
+<li><strong>Devolver estructuras</strong> (objetos) en lugar de valores sueltos.</li>
+<li><strong>Early return agresivo</strong>: lanzar <code>new Error(&quot;mensaje&quot;)</code> si falla, salvo que explícitamente se quiera silenciar.</li>
+</ul>
+<h3 id="patrón-de-funciones-grandes-con-fases-internas">Patrón de funciones grandes con fases internas</h3>
+<pre><code class="language-js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">ejemplo</span>(<span class="hljs-params">config</span>) {
+
+  <span class="hljs-keyword">const</span> input = config.<span class="hljs-property">input</span>;
+  <span class="hljs-keyword">if</span> (!input) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;input required&quot;</span>);
+
+  <span class="hljs-keyword">let</span> parsed;
+  <span class="hljs-keyword">let</span> result;
+
+  <span class="hljs-title class_">Parsing</span>: {
+    parsed = <span class="hljs-title function_">parse</span>(input);
+  }
+
+  <span class="hljs-title class_">Validation</span>: {
+    <span class="hljs-keyword">const</span> valid = <span class="hljs-title function_">validate</span>(parsed);
+    <span class="hljs-keyword">if</span> (!valid) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;invalid input&quot;</span>);
+  }
+
+  <span class="hljs-title class_">Processing</span>: {
+    result = <span class="hljs-title function_">compute</span>(parsed);
+  }
+
+  <span class="hljs-title class_">Format</span>: {
+    result = <span class="hljs-title function_">format</span>(result);
+  }
+
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">ok</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">value</span>: result
+  };
+}
+</code></pre>
+<h2 id="arquitectura">ARQUITECTURA</h2>
+<ul>
+<li>
+<p>Preferir <strong>APIs pequeñas</strong> y métodos <strong>reusables</strong>.</p>
+</li>
+<li>
+<p><strong>No descomponer artificialmente</strong> parse/validate/process/format en varias funciones; usar scopes internos si es necesario.</p>
+</li>
+<li>
+<p>Evitar dependencias si <strong>JS estándar basta</strong>, pero se pueden mencionar librerías si tiene sentido.</p>
+</li>
+<li>
+<p><strong>Funciones utilitarias genéricas</strong>:</p>
+<ul>
+<li>Puras y predecibles.</li>
+<li>Entrada + salida explícita (config objects + estructuras).</li>
+<li>Errores claros (<code>throw new Error</code>).</li>
+<li>Iteraciones explícitas (<code>for</code> o <code>Object.keys + for</code>).</li>
+<li>Evitar magia JS.</li>
+<li>Comentarios mínimos inline para fases.</li>
+</ul>
+</li>
+</ul>
+<h2 id="control-de-errores">CONTROL DE ERRORES</h2>
+<ul>
+<li>Preferir <strong>throws</strong> sobre <code>{ok: false}</code>.</li>
+<li>Mensajes claros que expliquen por qué se interrumpe la función.</li>
+<li>Silenciar solo cuando explícitamente se indique.</li>
+</ul>
+<h2 id="legisibilidad-y-nombres">LEGISIBILIDAD Y NOMBRES</h2>
+<ul>
+<li>Nombres semánticos, evitar abreviaturas crípticas.</li>
+<li>Evitar expresiones complejas; usar variables temporales para claridad.</li>
+<li>Comentarios breves para fases o pasos si ayudan a la comprensión.</li>
+</ul>
+<hr>
+<p>Con esto, <strong>todo tu código generado seguirá estas reglas</strong> y respetará tu estilo para funciones, clases, utilidades, CLI tools o frameworks.</p>
+<p>Si quieres, puedo hacer ahora un <strong>mini ejemplo completo con todas estas reglas aplicadas en una clase real de JS</strong>, para ver cómo queda en práctica. ¿Quieres que lo haga?</p>
+
+            
+            
+        </body>
+        </html>

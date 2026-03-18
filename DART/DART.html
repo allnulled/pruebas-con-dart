@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Dart cheat sheet by allnulled</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="dart-cheat-sheet-by-allnulled">Dart cheat sheet by allnulled</h1>
+<p>Chuleta para el lenguaje de Dart.</p>
+<h1 id="índice-del-documento">Índice del documento</h1>
+<ul>
+<li><a href="#recursos">Recursos</a>
+<ul>
+<li><a href="#recursos-relacionados-con-dart">Recursos relacionados con Dart</a></li>
+</ul>
+</li>
+<li><a href="#clases">Clases</a>
+<ul>
+<li><a href="#propiedades-y-m%C3%A9todos">Propiedades y métodos</a></li>
+<li><a href="#herencia-simple">Herencia simple</a></li>
+<li><a href="#herencia-con-abstract-abstract-extends">Herencia con abstract (abstract + extends)</a></li>
+<li><a href="#herencia-con-final">Herencia con final</a></li>
+<li><a href="#herencia-con-mixins-with">Herencia con mixins (with)</a></li>
+<li><a href="#herencia-con-interfaces-implements">Herencia con interfaces (implements)</a></li>
+<li><a href="#las-anteriores-combinadas-a-la-vez">Las anteriores combinadas a la vez</a></li>
+<li><a href="#un-ejemplo-pr%C3%A1ctico">Un ejemplo práctico</a></li>
+</ul>
+</li>
+<li><a href="#estilos">Estilos</a>
+<ul>
+<li><a href="#introducci%C3%B3n">Introducción</a></li>
+<li><a href="#componentes-estilizantes">Componentes estilizantes</a>
+<ul>
+<li><a href="#componente-estilizante-align">Componente estilizante Align</a></li>
+<li><a href="#componente-estilizante-center">Componente estilizante Center</a></li>
+<li><a href="#componente-estilizante-container">Componente estilizante Container</a></li>
+<li><a href="#componente-estilizante-decoratedbox">Componente estilizante DecoratedBox</a></li>
+<li><a href="#componente-estilizante-expanded">Componente estilizante Expanded</a></li>
+<li><a href="#componente-estilizante-padding">Componente estilizante Padding</a></li>
+<li><a href="#componente-estilizante-sizedbox">Componente estilizante SizedBox</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#hook-en-compilaci%C3%B3n">Hook en compilación</a>
+<ul>
+<li><a href="#usos">Usos</a></li>
+<li><a href="#nota-importante">Nota importante</a></li>
+<li><a href="#paso-1-a%C3%B1adir-dependencias-necesarias-en-el-pubspecyaml">Paso 1. Añadir dependencias necesarias en el pubspec.yaml</a></li>
+<li><a href="#paso-2-a%C3%B1adir-la-clase-con-el-builder-espec%C3%ADfico">Paso 2. Añadir la clase con el Builder específico</a></li>
+<li><a href="#paso-3-a%C3%B1adir-el-builder-en-el-buildyaml">Paso 3. Añadir el builder en el build.yaml</a></li>
+<li><a href="#paso-4-ejecutar-el-build">Paso 4. Ejecutar el build</a></li>
+</ul>
+</li>
+<li><a href="#hook-en-compilaci%C3%B3n-para-anotaciones">Hook en compilación para anotaciones</a>
+<ul>
+<li><a href="#paso-1-a%C3%B1adir-dependencias-necesarias-en-el-pubspecyaml">Paso 1. Añadir dependencias necesarias en el pubspec.yaml</a></li>
+<li><a href="#paso-2-a%C3%B1adir-la-clase-con-el-builder-espec%C3%ADfico">Paso 2. Añadir la clase con el Builder específico</a></li>
+<li><a href="#paso-3-a%C3%B1adir-el-builder-en-el-buildyaml">Paso 3. Añadir el builder en el build.yaml</a></li>
+<li><a href="#paso-4-a%C3%B1adir-la-clase-de-la-anotaci%C3%B3n">Paso 4. Añadir la clase de la anotación</a></li>
+<li><a href="#paso-5-a%C3%B1adir-las-anotaciones-en-el-c%C3%B3digo-importando-la-anotaci%C3%B3n">Paso 5. Añadir las anotaciones en el código importando la anotación</a></li>
+<li><a href="#paso-6-buildear">Paso 6. Buildear</a></li>
+</ul>
+</li>
+<li><a href="#crear-una-l%C3%ADnea-de-comandos-simple">Crear una línea de comandos simple</a>
+<ul>
+<li><a href="#1-a%C3%B1adir-el-ejecutable-en-el-pubspec"> Añadir el ejecutable en el pubspec</a></li>
+<li><a href="#2-a%C3%B1adir-la-clase-del-ejecutable"> Añadir la clase del ejecutable</a>
+<ul>
+<li><a href="#clase-de-entrada-de-ejecutable">Clase de entrada de ejecutable</a></li>
+<li><a href="#clase-de-l%C3%B3gica-de-ejecutable">Clase de lógica de ejecutable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#crear-una-l%C3%ADnea-de-comandos-con-endpoints-din%C3%A1micos">Crear una línea de comandos con endpoints dinámicos</a></li>
+<li><a href="#crear-un-servidor-simple">Crear un servidor simple</a></li>
+<li><a href="#crear-un-servidor-con-endpoints-din%C3%A1micos">Crear un servidor con endpoints dinámicos</a></li>
+<li><a href="#crear-rutas-de-aplicaci%C3%B3n-cliente-simple">Crear rutas de aplicación cliente simple</a></li>
+<li><a href="#crear-rutas-de-aplicaci%C3%B3n-cliente-con-endpoints-din%C3%A1micos">Crear rutas de aplicación cliente con endpoints dinámicos</a></li>
+<li><a href="#json-parse-y-stringify">JSON parse y stringify</a></li>
+</ul>
+<h1 id="recursos">Recursos</h1>
+<h2 id="recursos-relacionados-con-dart">Recursos relacionados con Dart</h2>
+<p>Generar código Dart con Gémini:</p>
+<ul>
+<li><a href="https://dart.dev/#try-dart">https://dart.dev/#try-dart</a></li>
+</ul>
+<p>Documentación oficial de Dart:</p>
+<ul>
+<li><a href="https://dart.dev/docs">https://dart.dev/docs</a></li>
+</ul>
+<p>Referencia de API oficial del Dart SDK:</p>
+<ul>
+<li><a href="https://api.dart.dev/">https://api.dart.dev/</a></li>
+</ul>
+<p>Para evaluar Dart directamente:</p>
+<ul>
+<li><a href="https://dartpad.dev/">https://dartpad.dev/</a></li>
+</ul>
+<p>Para pasar de código Dart a JavaScript:</p>
+<ul>
+<li><a href="https://www.codeconvert.ai/dart-to-javascript-converter">https://www.codeconvert.ai/dart-to-javascript-converter</a></li>
+</ul>
+<p>Para pasar de código Dart a C++:</p>
+<ul>
+<li><a href="https://www.codeconvert.ai/dart-to-c++-converter">https://www.codeconvert.ai/dart-to-c++-converter</a></li>
+</ul>
+<h1 id="clases">Clases</h1>
+<p>En esta sección se exploran las clases en Dart.</p>
+<h2 id="propiedades-y-métodos">Propiedades y métodos</h2>
+<pre><code class="language-dart"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Ejemplo</span> </span>{
+
+  <span class="hljs-comment">// Propiedades dinámicas</span>
+  <span class="hljs-built_in">String</span> name = <span class="hljs-string">&quot;default&quot;</span>;
+  <span class="hljs-keyword">final</span> <span class="hljs-built_in">String</span> fixedName = <span class="hljs-string">&quot;fixed&quot;</span>;
+  <span class="hljs-built_in">int?</span> age;
+
+  <span class="hljs-built_in">String</span> <span class="hljs-keyword">get</span> nickname =&gt; name;
+
+  <span class="hljs-comment">// Propiedades estáticas</span>
+  <span class="hljs-keyword">static</span> <span class="hljs-built_in">String</span> appName = <span class="hljs-string">&quot;App&quot;</span>;
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-built_in">String</span> version = <span class="hljs-string">&quot;1.0&quot;</span>;
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-built_in">int</span> year = <span class="hljs-number">2026</span>;
+
+  <span class="hljs-keyword">static</span> <span class="hljs-built_in">String</span> <span class="hljs-keyword">get</span> label =&gt; <span class="hljs-string">&quot;Label&quot;</span>;
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">set</span> label(<span class="hljs-built_in">String</span> l) {}
+
+  <span class="hljs-comment">// Constructor</span>
+  Ejemplo(name, age) {
+    <span class="hljs-keyword">this</span>.name = name;
+    <span class="hljs-keyword">this</span>.age = age;
+  }
+
+  <span class="hljs-comment">// Métodos dinámicos</span>
+  <span class="hljs-keyword">void</span> greet() {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hi <span class="hljs-subst">$name</span>&quot;</span>);
+  }
+
+  <span class="hljs-built_in">String</span> <span class="hljs-keyword">get</span> greeting =&gt; <span class="hljs-string">&quot;Hi <span class="hljs-subst">$name</span>&quot;</span>;
+
+  <span class="hljs-keyword">set</span> greeting(<span class="hljs-built_in">String</span> val) {
+    name = val;
+  }
+
+  <span class="hljs-comment">// Métodos estáticos</span>
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> staticGreet() {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hi App&quot;</span>);
+  }
+
+  <span class="hljs-keyword">static</span> <span class="hljs-built_in">String</span> <span class="hljs-keyword">get</span> staticGreeting =&gt; <span class="hljs-string">&quot;Hi App&quot;</span>;
+
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">set</span> staticGreeting(<span class="hljs-built_in">String</span> val) {}
+}
+
+<span class="hljs-keyword">void</span> main() {}
+</code></pre>
+<p>En JS equivaldría a:</p>
+<pre><code class="language-dart"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Ejemplo</span> </span>{
+
+  <span class="hljs-built_in">String</span> name = <span class="hljs-string">&quot;&quot;</span>;
+  <span class="hljs-built_in">int</span> _age = <span class="hljs-number">0</span>;
+
+  <span class="hljs-comment">// Constructor</span>
+  constructor(name, age) {
+    <span class="hljs-keyword">this</span>.name = name; <span class="hljs-comment">// mutable per instance</span>
+    <span class="hljs-keyword">this</span>._age = age;  <span class="hljs-comment">// assignable only in constructor</span>
+  }
+
+  <span class="hljs-comment">// Instance property: age (read-only)</span>
+  <span class="hljs-keyword">get</span> age {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._age;
+  }
+
+  <span class="hljs-comment">// Instance property: nickname (read-only)</span>
+  <span class="hljs-keyword">get</span> nickname {
+    <span class="hljs-keyword">return</span> name;
+  }
+
+  <span class="hljs-comment">// Instance methods</span>
+  greet() {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hi <span class="hljs-subst">${name}</span>&quot;</span>);
+  }
+
+  <span class="hljs-keyword">get</span> greeting {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hi <span class="hljs-subst">${name}</span>&quot;</span>;
+  }
+
+  <span class="hljs-keyword">set</span> greeting(val) {
+    name = val;
+  }
+
+  <span class="hljs-comment">// Static properties</span>
+  <span class="hljs-keyword">static</span> <span class="hljs-built_in">String</span> appName = <span class="hljs-string">&quot;App&quot;</span>;          <span class="hljs-comment">// mutable, class-level</span>
+  <span class="hljs-keyword">static</span> <span class="hljs-built_in">String</span> version = <span class="hljs-string">&quot;1.0&quot;</span>;          <span class="hljs-comment">// final per class (no enforced immutability in JS)</span>
+  <span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> year = <span class="hljs-number">2026</span>;              <span class="hljs-comment">// compile-time const equivalent</span>
+
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> label {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Label&quot;</span>;
+  }
+
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">set</span> label(l) {
+    <span class="hljs-comment">// empty setter</span>
+  }
+
+  <span class="hljs-comment">// Static methods</span>
+  <span class="hljs-keyword">static</span> staticGreet() {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hi App&quot;</span>);
+  }
+
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> staticGreeting {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hi App&quot;</span>;
+  }
+
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">set</span> staticGreeting(val) {
+    <span class="hljs-comment">// empty setter</span>
+  }
+}
+<span class="hljs-keyword">void</span> main (){}
+</code></pre>
+<h2 id="herencia-simple">Herencia simple</h2>
+<pre><code class="language-dart"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>{
+  <span class="hljs-keyword">void</span> hello() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello A&quot;</span>);
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">A</span> </span>{
+  <span class="hljs-keyword">void</span> bye() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Bye B&quot;</span>);
+}
+
+<span class="hljs-keyword">void</span> main() {
+  <span class="hljs-keyword">final</span> b = B();
+  b.hello(); <span class="hljs-comment">// ✅ heredado</span>
+  b.bye();   <span class="hljs-comment">// ✅ propio</span>
+}
+</code></pre>
+<h2 id="herencia-con-abstract-abstract--extends">Herencia con abstract (abstract + extends)</h2>
+<p>Las clases abstractas:</p>
+<ul>
+<li>No se pueden instanciar.</li>
+<li>Obligan a las subclases a implementar métodos abstractos.</li>
+<li>Puede contener métodos concretos también.</li>
+</ul>
+<pre><code class="language-dart"><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Animal</span> </span>{
+  <span class="hljs-keyword">void</span> speak();  <span class="hljs-comment">// abstract, obliga a implementar</span>
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dog</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Animal</span> </span>{
+  <span class="hljs-meta">@override</span>
+  <span class="hljs-keyword">void</span> speak() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Woof&quot;</span>);
+}
+<span class="hljs-keyword">void</span> main (){}
+</code></pre>
+<h2 id="herencia-con-final">Herencia con final</h2>
+<p>La final class:</p>
+<ul>
+<li>No puede ser extendida.</li>
+<li>Solo se pueden crear instancias de la misma clase (útil para singletons).</li>
+</ul>
+<pre><code class="language-dart"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> </span>{
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Singleton instance = Singleton._internal();
+  Singleton._internal(); <span class="hljs-comment">// constructor privado</span>
+}
+<span class="hljs-keyword">void</span> main (){}
+</code></pre>
+<h2 id="herencia-con-mixins-with">Herencia con mixins (with)</h2>
+<ul>
+<li>Puedes usar varios a la vez sobre 1 clase.</li>
+<li>No puedes instanciar un mixin suelto.</li>
+<li>Antes se podía pedir una clase base desde el mixin, pero ya no.</li>
+</ul>
+<pre><code class="language-dart"><span class="hljs-keyword">mixin</span> Flyer {
+  <span class="hljs-keyword">void</span> fly() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Flying&quot;</span>);
+}
+
+<span class="hljs-keyword">mixin</span> Runner {
+  <span class="hljs-keyword">void</span> run() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Running&quot;</span>);
+}
+
+<span class="hljs-keyword">mixin</span> Swimmer {
+  <span class="hljs-keyword">void</span> swim() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Swiming&quot;</span>);
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bird</span> <span class="hljs-title">with</span> <span class="hljs-title">Flyer</span> </span>{}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SuperHero</span> <span class="hljs-title">with</span> <span class="hljs-title">Flyer</span>, <span class="hljs-title">Swimmer</span>, <span class="hljs-title">Runner</span> </span>{}
+
+<span class="hljs-keyword">void</span> main() {
+  Bird b = Bird();
+  b.fly(); <span class="hljs-comment">// ✅ hereda del mixin</span>
+
+  SuperHero s = SuperHero();
+  s.fly();
+  s.swim();
+  s.run();
+}
+</code></pre>
+<h2 id="herencia-con-interfaces-implements">Herencia con interfaces (implements)</h2>
+<ul>
+<li>Obligatorio sobrescribir todos los métodos de la interfaz.</li>
+<li>No heredas implementación, solo el “contrato”.</li>
+</ul>
+<pre><code class="language-dart"><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Animal</span> </span>{
+  <span class="hljs-keyword">void</span> sayHi();
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Robot</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Animal</span> </span>{
+  <span class="hljs-meta">@override</span>
+  <span class="hljs-keyword">void</span> sayHi() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Beep&quot;</span>);
+}
+
+<span class="hljs-keyword">void</span> main () {}
+</code></pre>
+<h2 id="las-anteriores-combinadas-a-la-vez">Las anteriores combinadas a la vez</h2>
+<pre><code class="language-dart"><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Comparable</span>&lt;<span class="hljs-title">T</span>&gt; </span>{
+  <span class="hljs-built_in">int</span> compareTo(T other);
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bird</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Animal</span> </span>{
+    <span class="hljs-keyword">void</span> eat() {}
+    <span class="hljs-keyword">void</span> pio() {}
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Cat</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Animal</span> </span>{
+    <span class="hljs-keyword">void</span> eat() {}
+    <span class="hljs-keyword">void</span> miau() {}
+}
+
+<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Animal</span> </span>{
+  <span class="hljs-keyword">void</span> eat();
+}
+
+<span class="hljs-keyword">mixin</span> Runner {
+  <span class="hljs-keyword">void</span> run() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Running&quot;</span>);
+}
+
+<span class="hljs-keyword">mixin</span> Flyer {
+  <span class="hljs-keyword">void</span> fly() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Flying&quot;</span>);
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CatBird</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Animal</span> <span class="hljs-title">with</span> <span class="hljs-title">Flyer</span>, <span class="hljs-title">Runner</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Comparable</span>&lt;<span class="hljs-title">Animal</span>&gt; </span>{
+  <span class="hljs-meta">@override</span>
+  <span class="hljs-keyword">void</span> eat() =&gt; <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Eating&quot;</span>);
+
+  <span class="hljs-meta">@override</span>
+  <span class="hljs-built_in">int</span> compareTo(Animal other) =&gt; <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-keyword">void</span> main (){}
+</code></pre>
+<h2 id="un-ejemplo-práctico">Un ejemplo práctico</h2>
+<p>A la hora de la verdad, seguramente esta sería la fórmula más usada:</p>
+<pre><code class="language-dart"><span class="hljs-keyword">mixin</span> HasName {
+    <span class="hljs-built_in">String</span> name = <span class="hljs-string">&quot;some&quot;</span>;
+}
+
+<span class="hljs-keyword">mixin</span> HasLegs {
+    Boolean hasLegs = <span class="hljs-keyword">true</span>;
+}
+
+<span class="hljs-keyword">mixin</span> CanWalk <span class="hljs-keyword">on</span> HasName, HasLegs {
+    <span class="hljs-keyword">void</span> walk() {
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;<span class="hljs-subst">${name}</span> is walking&quot;</span>);
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Human</span> <span class="hljs-title">with</span> <span class="hljs-title">HasName</span>, <span class="hljs-title">HasLegs</span>, <span class="hljs-title">CanWalk</span> </span>{
+    <span class="hljs-built_in">String</span> name = <span class="hljs-string">&quot;Human&quot;</span>;
+}
+
+<span class="hljs-keyword">void</span> main() {
+    Human().walk();
+}
+</code></pre>
+<p>Lo cual en JavaScript se vería así:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">HasName</span> = <span class="hljs-title class_">Base</span> =&gt; <span class="hljs-keyword">class</span> <span class="hljs-title class_">extends</span> <span class="hljs-title class_">Base</span> {
+    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">...args</span>) {
+        <span class="hljs-variable language_">super</span>(...args);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&quot;some&quot;</span>;
+    }
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">HasLegs</span> = <span class="hljs-title class_">Base</span> =&gt; <span class="hljs-keyword">class</span> <span class="hljs-title class_">extends</span> <span class="hljs-title class_">Base</span> {
+    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">...args</span>) {
+        <span class="hljs-variable language_">super</span>(...args);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">hasLegs</span> = <span class="hljs-literal">true</span>;
+    }
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">CanWalk</span> = <span class="hljs-title class_">Base</span> =&gt; <span class="hljs-keyword">class</span> <span class="hljs-title class_">extends</span> <span class="hljs-title class_">Base</span> {
+    <span class="hljs-title function_">walk</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> is walking`</span>);
+    }
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Human</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">CanWalk</span>(<span class="hljs-title class_">HasLegs</span>(<span class="hljs-title class_">HasName</span>(<span class="hljs-keyword">class</span> {}))) {
+    <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-variable language_">super</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&quot;Human&quot;</span>;
+    }
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Human</span>().<span class="hljs-title function_">walk</span>();
+}
+
+<span class="hljs-title function_">main</span>();
+</code></pre>
+<h1 id="estilos">Estilos</h1>
+<p>En esta sección trataremos cómo se manejan los estilos en Dart.</p>
+<h2 id="introducción">Introducción</h2>
+<ul>
+<li>Cada componente tiene su propia forma de estilos</li>
+</ul>
+<h2 id="componentes-estilizantes">Componentes estilizantes</h2>
+<ul>
+<li><a href="#introducci%C3%B3n">Introducción</a></li>
+<li><a href="#componentes-estilizantes">Componentes estilizantes</a>
+<ul>
+<li><a href="#componente-estilizante-align">Componente estilizante Align</a></li>
+<li><a href="#componente-estilizante-center">Componente estilizante Center</a></li>
+<li><a href="#componente-estilizante-container">Componente estilizante Container</a></li>
+<li><a href="#componente-estilizante-decoratedbox">Componente estilizante DecoratedBox</a></li>
+<li><a href="#componente-estilizante-expanded">Componente estilizante Expanded</a></li>
+<li><a href="#componente-estilizante-padding">Componente estilizante Padding</a></li>
+<li><a href="#componente-estilizante-sizedbox">Componente estilizante SizedBox</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="componente-estilizante-align">Componente estilizante Align</h3>
+<pre><code class="language-dart">
+</code></pre>
+<h3 id="componente-estilizante-center">Componente estilizante Center</h3>
+<pre><code class="language-dart">
+</code></pre>
+<h3 id="componente-estilizante-container">Componente estilizante Container</h3>
+<pre><code class="language-dart">Container(
+  margin: <span class="hljs-keyword">const</span> EdgeInsets.all(<span class="hljs-number">10.0</span>),
+  color: Colors.amber[<span class="hljs-number">600</span>],
+  width: <span class="hljs-number">48.0</span>,
+  height: <span class="hljs-number">48.0</span>,
+)
+</code></pre>
+<h3 id="componente-estilizante-decoratedbox">Componente estilizante DecoratedBox</h3>
+<pre><code class="language-dart">
+</code></pre>
+<h3 id="componente-estilizante-expanded">Componente estilizante Expanded</h3>
+<pre><code class="language-dart">
+</code></pre>
+<h3 id="componente-estilizante-padding">Componente estilizante Padding</h3>
+<pre><code class="language-dart">Padding(
+  padding: EdgeInsets.all(<span class="hljs-number">16.0</span>),
+  child: Text(<span class="hljs-string">&#x27;Hello World!&#x27;</span>),
+);
+</code></pre>
+<h3 id="componente-estilizante-sizedbox">Componente estilizante SizedBox</h3>
+<pre><code class="language-dart">
+</code></pre>
+<h1 id="hook-en-compilación">Hook en compilación</h1>
+<p>Un hook en compilación te permite hacer algo en el builder integrado de Dart/Flutter.</p>
+<h2 id="usos">Usos</h2>
+<p>Entre los hooks del builder van los hooks para extraer anotaciones del código y generar código en <em>compilation-time</em>, por ejemplo.</p>
+<p>Pero este ejemplo es minimalista, y solo generará un fichero plano diciendo hola.</p>
+<h2 id="nota-importante">Nota importante</h2>
+<blockquote>
+<p>El código de este tipo de hook <strong>no se ejecuta</strong> al presionar CTRL+S, F5 ni CTRL+F5 con la extensión de VSCode para Dart/Flutter. Ahí solo se ejecuta el analyzer y algo más, y según ChatGPT no se puede hookear.</p>
+</blockquote>
+<blockquote>
+<p>El código de este tipo de hook <strong>sí se ejecuta</strong> al hacer <code>$ dart run build_runner build</code> desde la consola.</p>
+</blockquote>
+<h2 id="paso-1-añadir-dependencias-necesarias-en-el-pubspecyaml">Paso 1. Añadir dependencias necesarias en el pubspec.yaml</h2>
+<p>Añadir estas dependencias en el fichero <code>pubspec.yaml</code>:</p>
+<pre><code class="language-yaml"><span class="hljs-attr">dev_dependencies:</span>
+  <span class="hljs-attr">build_runner:</span> <span class="hljs-string">^2.4.0</span>
+  <span class="hljs-attr">build:</span> <span class="hljs-string">^2.4.0</span>
+</code></pre>
+<h2 id="paso-2-añadir-la-clase-con-el-builder-específico">Paso 2. Añadir la clase con el Builder específico</h2>
+<p>En el caso del proyecto en el que estoy, tengo una carpeta de builders propios del framework que estoy construyendo, en:</p>
+<ul>
+<li><code>lib/toolkit/boj/builders</code></li>
+</ul>
+<p>Y concretamente, este ejemplo lo estoy generando en:</p>
+<ul>
+<li><code>lib/toolkit/boj/builders/hello/HelloBuilder.dart</code></li>
+</ul>
+<p>El contenido de este fichero es:</p>
+<pre><code class="language-dart"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;dart:async&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:build/build.dart&#x27;</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HolaBuilder</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Builder</span> </span>{
+
+  <span class="hljs-meta">@override</span>
+  <span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt;&gt; <span class="hljs-keyword">get</span> buildExtensions =&gt; {
+    <span class="hljs-string">r&#x27;$package$&#x27;</span>: [<span class="hljs-string">&#x27;hola.txt&#x27;</span>],
+  };
+
+  <span class="hljs-meta">@override</span>
+  Future&lt;<span class="hljs-keyword">void</span>&gt; build(BuildStep buildStep) <span class="hljs-keyword">async</span> {
+    <span class="hljs-keyword">final</span> output = AssetId(buildStep.inputId.package, <span class="hljs-string">&#x27;hola.txt&#x27;</span>);
+    <span class="hljs-keyword">await</span> buildStep.writeAsString(output, <span class="hljs-string">&#x27;en compilation-time&#x27;</span>);
+  }
+
+}
+</code></pre>
+<h2 id="paso-3-añadir-el-builder-en-el-buildyaml">Paso 3. Añadir el builder en el build.yaml</h2>
+<p>El fichero <code>build.yaml</code>, y añadimos la referencia del builder:</p>
+<pre><code class="language-yaml"><span class="hljs-attr">targets:</span>
+  <span class="hljs-string">$default:</span>
+    <span class="hljs-attr">builders:</span>
+      <span class="hljs-string">fluttagenda|hola_builder:</span>
+        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+
+<span class="hljs-attr">builders:</span>
+  <span class="hljs-attr">hola_builder:</span>
+    <span class="hljs-attr">import:</span> <span class="hljs-string">&quot;package:fluttagenda/toolkit/boj/builders/hello/HelloBuilder.dart&quot;</span>
+    <span class="hljs-attr">builder_factories:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">holaBuilder</span>
+    <span class="hljs-attr">build_extensions:</span>
+      <span class="hljs-string">&quot;$package$&quot;</span><span class="hljs-string">:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">hola.txt</span>
+    <span class="hljs-attr">auto_apply:</span> <span class="hljs-string">root_package</span>
+    <span class="hljs-attr">build_to:</span> <span class="hljs-string">source</span>
+</code></pre>
+<h2 id="paso-4-ejecutar-el-build">Paso 4. Ejecutar el build</h2>
+<p>Ahora, cuando corramos:</p>
+<pre><code class="language-sh">dart run build_runner build
+</code></pre>
+<p>Se generará un fichero <code>hola.txt</code> en la raíz del proyecto con el contenido <code>en compilation-time</code>.</p>
+<p>No es gran cosa, pero es el ejemplo mínimo para empezar a hacer cosas.</p>
+<h1 id="hook-en-compilación-para-anotaciones">Hook en compilación para anotaciones</h1>
+<p>En el punto anterior vimos cómo hacer un hook mínimo en el builder.</p>
+<p>Ahora, vamos a hacer un hook en el builder que nos permita leer las anotaciones escritas en los ficheros fuente <code>*.dart</code> de todo nuestro proyecto (con glob) y generar un fichero (con código dart, usado en runtime).</p>
+<h2 id="paso-1-añadir-dependencias-necesarias-en-el-pubspecyaml-1">Paso 1. Añadir dependencias necesarias en el pubspec.yaml</h2>
+<p>Esto se ha explicado en el punto anterior, y con hacerlo 1 vez ya estaría.</p>
+<p>Sin embargo, en este caso estamos usando alguna librería más, así que la cosa queda así:</p>
+<p>Esto es el <code>dev_dependencies</code> del <code>pubspec.yaml</code>:</p>
+<pre><code class="language-yaml"><span class="hljs-attr">dev_dependencies:</span>
+  <span class="hljs-attr">build_web_compilers:</span> <span class="hljs-string">^4.4.12</span>
+  <span class="hljs-attr">flutter_test:</span>
+    <span class="hljs-attr">sdk:</span> <span class="hljs-string">flutter</span>
+  <span class="hljs-comment"># Estos son los que hemos añadido en el tutorial anterior</span>
+  <span class="hljs-attr">build_runner:</span> <span class="hljs-string">^2.4.0</span>
+  <span class="hljs-attr">build:</span> <span class="hljs-string">^2.4.0</span>
+  <span class="hljs-comment"># Estos son los que hemos añadido en este tutorial</span>
+  <span class="hljs-attr">analyzer:</span> <span class="hljs-string">^6.4.0</span>
+  <span class="hljs-attr">glob:</span> <span class="hljs-string">^2.1.2</span>
+  <span class="hljs-comment"># The &quot;flutter_lints&quot; package below contains a set of recommended lints to</span>
+  <span class="hljs-comment"># encourage good coding practices. The lint set provided by the package is</span>
+  <span class="hljs-comment"># activated in the `analysis_options.yaml` file located at the root of your</span>
+  <span class="hljs-comment"># package. See that file for information about deactivating specific lint</span>
+  <span class="hljs-comment"># rules and activating additional ones.</span>
+  <span class="hljs-attr">flutter_lints:</span> <span class="hljs-string">^6.0.0</span>
+
+</code></pre>
+<h2 id="paso-2-añadir-la-clase-con-el-builder-específico-1">Paso 2. Añadir la clase con el Builder específico</h2>
+<p>Estamos en el fichero: <code>lib/toolkit/boj/builders/boj_exposers/BojExposersBuilder.dart</code>.</p>
+<p>El contenido quedaría así:</p>
+<pre><code class="language-dart"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;dart:async&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;dart:convert&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:build/build.dart&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:glob/glob.dart&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:analyzer/dart/analysis/utilities.dart&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:analyzer/dart/ast/ast.dart&#x27;</span>;
+
+Builder bojExposersBuilder(BuilderOptions options) {
+  <span class="hljs-keyword">return</span> BojExposersBuilder();
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BojExposersBuilder</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Builder</span> </span>{
+  
+  <span class="hljs-meta">@override</span>
+  <span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt;&gt; <span class="hljs-keyword">get</span> buildExtensions =&gt; {
+    <span class="hljs-string">r&#x27;$package$&#x27;</span>: [<span class="hljs-string">&#x27;exposer.json&#x27;</span>],
+  };
+
+  <span class="hljs-meta">@override</span>
+  Future&lt;<span class="hljs-keyword">void</span>&gt; build(BuildStep buildStep) <span class="hljs-keyword">async</span> {
+    <span class="hljs-keyword">var</span> files = buildStep.findAssets(Glob(<span class="hljs-string">&#x27;lib/toolkit/boj/api/*.dart&#x27;</span>));
+    <span class="hljs-built_in">List</span> exposers = [];
+    <span class="hljs-keyword">await</span> <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> asset <span class="hljs-keyword">in</span> files) {
+      <span class="hljs-keyword">var</span> source = <span class="hljs-keyword">await</span> buildStep.readAsString(asset);
+      <span class="hljs-keyword">var</span> unit = parseString(content: source).unit;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> decl <span class="hljs-keyword">in</span> unit.declarations) {
+        <span class="hljs-keyword">if</span> (decl <span class="hljs-keyword">is</span> ClassDeclaration) {
+          <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> member <span class="hljs-keyword">in</span> decl.members) {
+            <span class="hljs-keyword">if</span> (member <span class="hljs-keyword">is</span> MethodDeclaration) {
+              <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> annotation <span class="hljs-keyword">in</span> member.metadata) {
+                <span class="hljs-keyword">if</span> (annotation.name.name == <span class="hljs-string">&#x27;Expose&#x27;</span>) {
+                  exposers.add({
+                    <span class="hljs-string">&quot;class&quot;</span>: decl.name.lexeme,
+                    <span class="hljs-string">&quot;method&quot;</span>: member.name.lexeme,
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    <span class="hljs-built_in">String</span> exposersJson = json.encode(exposers);
+    <span class="hljs-keyword">await</span> buildStep.writeAsString(AssetId(buildStep.inputId.package, <span class="hljs-string">&quot;exposer.json&quot;</span>), exposersJson);
+  }
+
+}
+</code></pre>
+<h2 id="paso-3-añadir-el-builder-en-el-buildyaml-1">Paso 3. Añadir el builder en el build.yaml</h2>
+<p>El build.yaml con el ejemplo anterior nos estaría quedando así:</p>
+<pre><code class="language-yaml"><span class="hljs-attr">targets:</span>
+  <span class="hljs-string">$default:</span>
+    <span class="hljs-attr">builders:</span>
+      <span class="hljs-comment"># Estos son los que hemos añadido en el tutorial anterior</span>
+      <span class="hljs-string">fluttagenda|hola_builder:</span>
+        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+      <span class="hljs-comment"># Estos son los que hemos añadido en este tutorial</span>
+      <span class="hljs-string">fluttagenda|boj_exposers_builder:</span>
+        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+
+<span class="hljs-attr">builders:</span>
+  <span class="hljs-comment"># Estos son los que hemos añadido en el tutorial anterior</span>
+  <span class="hljs-attr">hola_builder:</span>
+    <span class="hljs-attr">import:</span> <span class="hljs-string">&quot;package:fluttagenda/toolkit/boj/builders/hello/HelloBuilder.dart&quot;</span>
+    <span class="hljs-attr">builder_factories:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">holaBuilder</span>
+    <span class="hljs-attr">build_extensions:</span>
+      <span class="hljs-string">&quot;$package$&quot;</span><span class="hljs-string">:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">hola.txt</span>
+    <span class="hljs-attr">auto_apply:</span> <span class="hljs-string">root_package</span>
+    <span class="hljs-attr">build_to:</span> <span class="hljs-string">source</span>
+  <span class="hljs-comment"># Estos son los que hemos añadido en este tutorial</span>
+  <span class="hljs-attr">boj_exposers_builder:</span>
+    <span class="hljs-attr">import:</span> <span class="hljs-string">&quot;package:fluttagenda/toolkit/boj/builders/boj_exposers/BojExposersBuilder.dart&quot;</span>
+    <span class="hljs-attr">builder_factories:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">bojExposersBuilder</span>
+    <span class="hljs-attr">build_extensions:</span>
+      <span class="hljs-string">&quot;$package$&quot;</span><span class="hljs-string">:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">exposers.txt</span>
+    <span class="hljs-attr">auto_apply:</span> <span class="hljs-string">root_package</span>
+    <span class="hljs-attr">build_to:</span> <span class="hljs-string">source</span>
+</code></pre>
+<h2 id="paso-4-añadir-la-clase-de-la-anotación">Paso 4. Añadir la clase de la anotación</h2>
+<p>Necesitas la clase que construye la anotación, tan simple como una clase a pelo:</p>
+<p>Estamos en el fichero del proyecto <code>lib/toolkit/boj/annotations/Expose.dart</code>:</p>
+<pre><code class="language-dart"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Expose</span> </span>{
+  <span class="hljs-keyword">final</span> <span class="hljs-built_in">String</span> name;
+  <span class="hljs-keyword">final</span> <span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">dynamic</span>&gt; options;
+  <span class="hljs-keyword">const</span> Expose(<span class="hljs-keyword">this</span>.name, [<span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">const</span> []]);
+}
+</code></pre>
+<h2 id="paso-5-añadir-las-anotaciones-en-el-código-importando-la-anotación">Paso 5. Añadir las anotaciones en el código importando la anotación</h2>
+<p>Ahora solo tenemos que ir anotando sobre los métodos que queramos:</p>
+<pre><code class="language-dart"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:fluttagenda/toolkit/boj/annotations/Expose.dart&#x27;</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BojFichero1</span> </span>{
+
+  <span class="hljs-meta">@Expose</span>(<span class="hljs-string">&quot;texto&quot;</span>, [])
+  <span class="hljs-keyword">void</span> hello() {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello from BojFichero1.hello&quot;</span>);
+  }
+
+}
+</code></pre>
+<h2 id="paso-6-buildear">Paso 6. Buildear</h2>
+<p>Para compilar las anotaciones, solo te falta:</p>
+<pre><code class="language-sh">dart run build_runner build
+</code></pre>
+<p>En <code>exposer.json</code> ya nos aparece el nuevo contenido:</p>
+<pre><code class="language-json"><span class="hljs-punctuation">[</span><span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;class&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;BojWidgets&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;method&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hello&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">]</span>
+</code></pre>
+<p>¡Perfecto!</p>
+<p>A partir de ahora ya podremos recoger datos de las anotaciones y usarlos en tiempo de ejecución, o de compilación.</p>
+<h1 id="crear-una-línea-de-comandos-simple">Crear una línea de comandos simple</h1>
+<p>Para crear una línea de comandos simple con Dart, sigue leyendo.</p>
+<h2 id="1-añadir-el-ejecutable-en-el-pubspec">1. Añadir el ejecutable en el pubspec</h2>
+<p>En el <code>pubspec</code> tiene que aparecer la ruta al ejecutable global:</p>
+<pre><code class="language-yaml"><span class="hljs-comment"># Esto es para especificar un binario</span>
+<span class="hljs-attr">executables:</span>
+  <span class="hljs-attr">boj:</span> <span class="hljs-string">lib/toolkit/boj/binary.dart</span>
+</code></pre>
+<h2 id="2-añadir-la-clase-del-ejecutable">2. Añadir la clase del ejecutable</h2>
+<p>Podría estar todo en 1 clase, pero en este ejemplo vamos a hacer 1 fichero para el binario, y otro para la clase que gestiona la lógica. Esto es para diferenciar la entrada desde línea de comandos, y la API que gestiona la lógica de la línea de comandos, y poder reaprovecharla a nivel de API también.</p>
+<p>Por eso, crearemos 2 ficheros nuevos para gestionar el ejecutable:</p>
+<ul>
+<li>Clase de entrada: <code>lib/toolkit/boj/binary.dart</code></li>
+<li>Clase de lógica: <code>lib/toolkit/boj/api/BojCommandLineInterface.dart</code></li>
+</ul>
+<h3 id="clase-de-entrada-de-ejecutable">Clase de entrada de ejecutable</h3>
+<p>En el fichero <code>lib/toolkit/boj/binary.dart</code> algo como:</p>
+<pre><code class="language-dart">#!/usr/bin/env dart
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:fluttagenda/toolkit/boj/BojFramework.dart&#x27;</span>;
+
+<span class="hljs-keyword">void</span> main(<span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt; args) {
+  BojFramework.global.cli.start(args);
+}
+</code></pre>
+<h3 id="clase-de-lógica-de-ejecutable">Clase de lógica de ejecutable</h3>
+<p>Continuaríamos en otro fichero <code>lib/toolkit/boj/api/BojCommandLineInterface.dart</code>:</p>
+<pre><code class="language-dart"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:fluttagenda/toolkit/boj/BojFramework.dart&#x27;</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BojCommandLineInterface</span> </span>{
+
+  <span class="hljs-keyword">final</span> BojFramework boj;
+  
+  BojCommandLineInterface(<span class="hljs-keyword">this</span>.boj);
+
+  <span class="hljs-keyword">void</span> start(<span class="hljs-built_in">List</span> &lt;<span class="hljs-built_in">String</span>&gt; args) {
+    <span class="hljs-built_in">print</span>(args);
+  }
+
+}
+</code></pre>
+<h1 id="crear-una-línea-de-comandos-con-endpoints-dinámicos">Crear una línea de comandos con endpoints dinámicos</h1>
+<p>Linea de comandos con endpoints dinámicos basados en JSON.</p>
+<h1 id="crear-un-servidor-simple">Crear un servidor simple</h1>
+<p>Servidor con endpoints dinámicos basados en JSON.</p>
+<h1 id="crear-un-servidor-con-endpoints-dinámicos">Crear un servidor con endpoints dinámicos</h1>
+<p>Servidor con endpoints dinámicos basados en JSON.</p>
+<h1 id="crear-rutas-de-aplicación-cliente-simple">Crear rutas de aplicación cliente simple</h1>
+<p>Rutas con endpoints dinámicos basados en JSON.</p>
+<h1 id="crear-rutas-de-aplicación-cliente-con-endpoints-dinámicos">Crear rutas de aplicación cliente con endpoints dinámicos</h1>
+<p>Rutas con endpoints dinámicos basados en JSON.</p>
+<h1 id="json-parse-y-stringify">JSON parse y stringify</h1>
+<pre><code class="language-dart"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;dart:convert&#x27;</span>;
+
+<span class="hljs-keyword">void</span> main() {
+  <span class="hljs-built_in">print</span>(json.encode(<span class="hljs-built_in">List</span>.from([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])));
+  <span class="hljs-built_in">print</span>(json.encode(<span class="hljs-built_in">List</span>.from([<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;bar&#x27;</span>, <span class="hljs-string">&#x27;dart&#x27;</span>])));
+  <span class="hljs-built_in">print</span>(json.encode({<span class="hljs-string">&#x27;a&#x27;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;b&#x27;</span>: <span class="hljs-number">2</span>}));
+  <span class="hljs-built_in">print</span>(json.decode(<span class="hljs-string">&#x27;{&quot;a&quot;:1,&quot;b&quot;:2}&#x27;</span>));
+}
+</code></pre>
+
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>

@@ -1,0 +1,53 @@
+/**
+ * 
+ * @CHATGPT: ok. Se trataría de que cuando vea en el fichero final un 
+ * 
+ * ```dart
+ * // código dart
+ * ```
+ * 
+ * Luego le ponga:
+ * 
+ * Lo cual en JavaScript se vería así:
+ * 
+ * ```js
+ * // código js
+ * ```
+ * 
+ * Lo cual en WASM se vería así:
+ * 
+ * ```js
+ * // código wasm
+ * ```
+ * 
+ */
+const fs = require("fs");
+const marked = require("marked");
+const child_process = require("child_process");
+const glob = require("fast-glob");
+
+const localUtils = {
+  // @NOTICE: aquí puedes meter los métodos que quieras reusar.
+}
+
+const main = async function () {
+  const basedir = __dirname;
+  const mds = await glob(`${basedir}/**/TUTORIAL.md`);
+  let content = "";
+  for (let index = 0; index < mds.length; index++) {
+    const md = mds[index];
+    const mdRelative = md.replace(basedir + "/", "").replace(/\/TUTORIAL\.md$/g, "");
+    const subcontent = await fs.promises.readFile(md, "utf8");
+    content += `# ${mdRelative}\n\n${subcontent}\n\n`;
+  }
+  Parsear_el_markdown_y_pillar_los_code_dart: {
+    // @TODO: con marked.js pillamos el nodo, le apendizamos code:wasm y code:js en el ast o bueno, como sea que sepas hacerlo tú, no?
+    // @NOTICE: tienes también child_process.exec con "dart compile js tal -o cual"
+    // @NOTICE: tienes también child_process.exec con "dart compile wasm tal -o cual"
+  }
+
+  const outputFile = `${basedir}/DART.md`;
+  fs.promises.writeFile(outputFile, content, "utf8");
+};
+
+main();

@@ -1,0 +1,88 @@
+
+===== ./main.dart =====
+import 'package:flutter/material.dart';
+import 'toolkit/boj/BojFramework.dart';
+
+final BojFramework boj = BojFramework.global;
+
+void main() {
+  boj.debug.inspect(boj);
+  boj.debug.inspect(boj.utils.getVersion());
+  boj.debug.inspect(boj.utils.boj);
+  boj.debug.inspect(boj.widgets.Box);
+  boj.gui.start([MyApp()]);
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Column(
+          children: [
+            Text("Hello, from Boj!")
+              .fontSize(12)
+              .paddingAll(0),
+            boj.widgets.ControlForLine(content: "Whatever"),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+===== ./toolkit/boj/api/BojCommandLineInterface.dart =====
+import 'package:fluttagenda/toolkit/boj/BojFramework.dart';
+
+class BojCommandLineInterface {
+
+  final BojFramework boj;
+  
+  BojCommandLineInterface(this.boj);
+
+  void start(List <String> args) {
+    print(args);
+  }
+
+}
+
+===== ./toolkit/boj/BojFramework.dart =====
+import "./api/BojDebug.dart";
+import "./api/BojUtils.dart";
+import "./api/BojWidgets.dart";
+import "./api/BojCommandLineInterface.dart";
+import "./api/BojServerInterface.dart";
+import "./api/BojGraphicalUserInterface.dart";
+import "./api/BojTheme.dart";
+
+// Exportar extensiones:
+export "extensions/StyleExtensions.dart";
+
+class BojFramework {
+  
+  final String version = "1.0.0";
+
+  late BojUtils utils;
+  late BojDebug debug;
+  late BojWidgets widgets;
+  late BojGraphicalUserInterface gui;
+  late BojCommandLineInterface cli;
+  late BojServerInterface server;
+  late BojTheme theme;
+
+  BojFramework() {
+    utils = BojUtils(this);
+    debug = BojDebug(this);
+    widgets = BojWidgets(this);
+    gui = BojGraphicalUserInterface(this);
+    cli = BojCommandLineInterface(this);
+    server = BojServerInterface(this);
+    theme = BojTheme(this);
+  }
+
+  static final BojFramework global = BojFramework();
+
+}

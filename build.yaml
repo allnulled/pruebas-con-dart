@@ -1,0 +1,27 @@
+targets:
+  $default:
+    builders:
+      fluttagenda|hola_builder:
+        enabled: true
+      fluttagenda|boj_exposers_builder:
+        enabled: true
+
+builders:
+  hola_builder:
+    import: "package:fluttagenda/toolkit/boj/builders/hello/HelloBuilder.dart"
+    builder_factories:
+      - holaBuilder
+    build_extensions:
+      "$package$":
+        - hola.txt
+    auto_apply: root_package
+    build_to: source
+  boj_exposers_builder:
+    import: "package:fluttagenda/toolkit/boj/builders/boj_exposers/BojExposersBuilder.dart"
+    builder_factories:
+      - bojExposersBuilder
+    build_extensions:
+      "$package$":
+        - exposers.json
+    auto_apply: root_package
+    build_to: source
