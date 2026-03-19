@@ -160,6 +160,21 @@
 <li><a href="#un-ejemplo-pr%C3%A1ctico">Un ejemplo práctico</a></li>
 </ul>
 </li>
+<li><a href="#modulaci%C3%B3n-con-imports-y-exports">Modulación con imports y exports</a>
+<ul>
+<li><a href="#t%C3%A9cnicas-espec%C3%ADficas">Técnicas específicas</a>
+<ul>
+<li><a href="#consejo-1-usar-import-con-rutas-relativas-es-mejor-que-con-rutas-de-paquete">Consejo 1. Usar import con rutas relativas es mejor que con rutas de paquete</a></li>
+<li><a href="#consejo-2-imports-condicionales-para-clases-opinionadas-en-entorno">Consejo 2. Imports condicionales para clases opinionadas en entorno</a>
+<ul>
+<li><a href="#punto-1-las-3-carpetas-de-entorno">Punto 1. Las 3 carpetas de entorno</a></li>
+<li><a href="#punto-2-los-imports-condicionales-en-los-puntos-de-entrada-m%C3%A1s-altos">Punto 2. Los imports condicionales en los puntos de entrada más altos</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#estilos">Estilos</a>
 <ul>
 <li><a href="#introducci%C3%B3n">Introducción</a></li>
@@ -198,11 +213,12 @@
 </li>
 <li><a href="#crear-una-l%C3%ADnea-de-comandos-simple">Crear una línea de comandos simple</a>
 <ul>
-<li><a href="#1-a%C3%B1adir-el-ejecutable-en-el-pubspec"> Añadir el ejecutable en el pubspec</a></li>
-<li><a href="#2-a%C3%B1adir-la-clase-del-ejecutable"> Añadir la clase del ejecutable</a>
+<li><a href="#paso-1-a%C3%B1adir-el-ejecutable-en-el-pubspec">Paso 1. Añadir el ejecutable en el pubspec</a></li>
+<li><a href="#paso-2-a%C3%B1adir-la-clase-del-ejecutable">Paso 2. Añadir la clase del ejecutable</a>
 <ul>
-<li><a href="#clase-de-entrada-de-ejecutable">Clase de entrada de ejecutable</a></li>
-<li><a href="#clase-de-l%C3%B3gica-de-ejecutable">Clase de lógica de ejecutable</a></li>
+<li><a href="#paso-21-clase-de-entrada-de-ejecutable">Paso 2.1. Clase de entrada de ejecutable</a></li>
+<li><a href="#paso-22-clase-de-l%C3%B3gica-de-ejecutable">Paso 2.2. Clase de lógica de ejecutable</a></li>
+<li><a href="#paso-3-instalar-ejecutable">Paso 3. Instalar ejecutable</a></li>
 </ul>
 </li>
 </ul>
@@ -212,6 +228,20 @@
 <li><a href="#crear-un-servidor-con-endpoints-din%C3%A1micos">Crear un servidor con endpoints dinámicos</a></li>
 <li><a href="#crear-rutas-de-aplicaci%C3%B3n-cliente-simple">Crear rutas de aplicación cliente simple</a></li>
 <li><a href="#crear-rutas-de-aplicaci%C3%B3n-cliente-con-endpoints-din%C3%A1micos">Crear rutas de aplicación cliente con endpoints dinámicos</a></li>
+<li><a href="#patr%C3%B3n-singleton-en-static-inicializado-en-el-primer-constructor">Patrón singleton en static inicializado en el primer constructor</a></li>
+<li><a href="#crear-un-switcher-funcional-multidimensional-o-%C3%A1rbol-funcional">Crear un switcher funcional multidimensional o árbol funcional</a>
+<ul>
+<li><a href="#qu%C3%A9-necesidad">¿Qué necesidad?</a></li>
+<li><a href="#la-clase-functionaltree">La clase FunctionalTree</a></li>
+<li><a href="#objetivo">Objetivo</a></li>
+<li><a href="#lo-que-no-es">Lo que no es</a>
+<ul>
+<li><a href="#test-de-functionaltree">Test de FunctionalTree</a></li>
+<li><a href="#implementaci%C3%B3n-final-de-functionaltree">Implementación final de FunctionalTree</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#json-parse-y-stringify">JSON parse y stringify</a></li>
 </ul>
 <h1 id="recursos">Recursos</h1>
@@ -539,6 +569,200 @@
 
 <span class="hljs-title function_">main</span>();
 </code></pre>
+<h1 id="modulación-con-imports-y-exports">Modulación con imports y exports</h1>
+<p>Las técnicas de import y export de módulos de Dart te interesa entenderlas bien porque son la clave de la modulación.</p>
+<p>Según qué utilices y cómo, resulta en una cosa u otra.</p>
+<h2 id="técnicas-específicas">Técnicas específicas</h2>
+<p>En esta sección voy a hacer una lista de las técnicas de uso de <strong>import</strong> y <strong>export</strong> que parecen haber funcionado en los primeros pasos al menos.</p>
+<h3 id="consejo-1-usar-import-con-rutas-relativas-es-mejor-que-con-rutas-de-paquete">Consejo 1. Usar import con rutas relativas es mejor que con rutas de paquete</h3>
+<p>Con los <code>imports</code> con sus rutas relativas, el entorno del <code>cli</code> puede importar los ficheros sin conocer el proyecto.</p>
+<p>Aquí se ven las 2 formas de importar:</p>
+<pre><code class="language-dart"><span class="hljs-comment">// Rutas relativas son así:</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;ruta/a/fichero.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;./ruta/a/fichero.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../ruta/a/fichero.dart&quot;</span>;
+<span class="hljs-comment">// Rutas de paquete son así:</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;package:mipaquete/ruta/relativa/desde/lib/a/fichero.dart&quot;</span>;
+</code></pre>
+<p>Si en el <code>pubspec.yaml#name</code> tienes <code>mipaquete</code>, puedes usarlo como ruta relativa global.</p>
+<p>Pero pierdes eso, que un binario satelital pueda importar el framework sin conocer el proyecto.</p>
+<p>Por eso, de momento al menos, rutas relativas, <strong>pese a lo que diga ChatGPT</strong>.</p>
+<h3 id="consejo-2-imports-condicionales-para-clases-opinionadas-en-entorno">Consejo 2. Imports condicionales para clases opinionadas en entorno</h3>
+<p>Cuando digo entorno, me refiero a 2 casos principalmente:</p>
+<ul>
+<li><code>os</code>: caso de aplicación de sistema operativo (linux, windows, etc.)
+<ul>
+<li>discriminable con <code>import &quot;pascual&quot; if (dart.library.io);</code></li>
+</ul>
+</li>
+<li><code>ui</code>: caso de aplicación de interfaz de usuario (web, android, gtk, win, etc.)
+<ul>
+<li>discriminable con <code>import &quot;pascual&quot; if (dart.library.ui);</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="punto-1-las-3-carpetas-de-entorno">Punto 1. Las 3 carpetas de entorno</h4>
+<p>En cualquier punto de la estructura de ficheros de la API, deberías poder meter 3 carpetas:</p>
+<ul>
+<li><code>env.any</code>
+<ul>
+<li>Aquí irán las clases/interfaces comunes en cualquier entorno</li>
+<li>Normalmente serán clases vacías</li>
+</ul>
+</li>
+<li><code>env.os</code>
+<ul>
+<li>Aquí irán las clases/interfaces que solo cargarán en entorno <code>os</code></li>
+</ul>
+</li>
+<li><code>env.ui</code>
+<ul>
+<li>Aquí irán las clases/interfaces que solo cargarán en entorno <code>ui</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="punto-2-los-imports-condicionales-en-los-puntos-de-entrada-más-altos">Punto 2. Los imports condicionales en los puntos de entrada más altos</h4>
+<p>Para que no toda la API tenga siempre que estar bajo la carpeta <code>env.ui</code>, lo que haces es:</p>
+<ul>
+<li>Solo poner dentro de <code>env.ui</code> las clases que se requieren en el código no opinionado en entorno.
+<ul>
+<li>A esto me refiero con el punto de entrada más alto
+<ul>
+<li>Al punto más alto del árbol donde se enganchan con la API no opinionada de entorno (la básica).</li>
+</ul>
+</li>
+<li>Estas clases sí se tienen que usar con imports condicionales</li>
+<li>Porque estarán accesibles desde el código no opinionado en entorno y hay que resolvérselas</li>
+<li>Pero más allá:</li>
+</ul>
+</li>
+<li>La API opinionada en entorno, ponerla en otra carpeta
+<ul>
+<li><strong>SIN USAR IMPORTS CONDICIONALES</strong></li>
+<li>La prueba final de que lo haces bien es que:
+<ul>
+<li>La aplicación sigue funcionando bien en distintos entornos</li>
+<li>Pero estas clases (de API opinionada en entorno) ya no usan <code>import + if</code></li>
+<li><em>Porque la clase de la que cuelgan no va a usar ninguno de esos métodos o propiedades</em> y Dart no se quejará</li>
+<li>Solo en código entorno-opinionado se verán explotadas esas clases.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>El código de los imports queda así:</p>
+<pre><code class="language-dart"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;api/BojDebug.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;api/BojUtils.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;api/BojCommandLine.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;api/env.any/BojWidgets.dart&quot;</span> <span class="hljs-keyword">if</span> (dart.<span class="hljs-keyword">library</span>.ui) <span class="hljs-string">&quot;api/env.ui/BojWidgetsOnUi.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;api/env.any/BojServer.dart&quot;</span> <span class="hljs-keyword">if</span> (dart.<span class="hljs-keyword">library</span>.io) <span class="hljs-string">&quot;api/env.os/BojServerOnOs.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;api/env.any/BojGraphicalUserInterface.dart&quot;</span> <span class="hljs-keyword">if</span> (dart.<span class="hljs-keyword">library</span>.ui) <span class="hljs-string">&quot;api/env.ui/BojGraphicalUserInterfaceOnUi.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;api/env.any/BojTheme.dart&quot;</span> <span class="hljs-keyword">if</span> (dart.<span class="hljs-keyword">library</span>.ui) <span class="hljs-string">&quot;api/env.ui/BojThemeOnUi.dart&quot;</span>;
+
+<span class="hljs-comment">// Exportar extensiones:</span>
+<span class="hljs-keyword">export</span> <span class="hljs-string">&quot;extensions/env.any/StyleExtensions.dart&quot;</span> <span class="hljs-keyword">if</span> (dart.<span class="hljs-keyword">library</span>.ui) <span class="hljs-string">&quot;extensions/env.ui/StyleExtensionsOnUi.dart&quot;</span>;
+</code></pre>
+<p>Ahora mismo, está así así. Seguramente, lo ideal máximo es reducir a 1 solo:</p>
+<ul>
+<li><code>if(dart.library.ui) &quot;api-grafica.dart&quot;</code></li>
+</ul>
+<p>Ahora mismo hay varias capas de alto nivel que incurren ahí, y por eso hay varios imports condicionales.</p>
+<blockquote>
+<p>Seguramente, lo mejor fuera que las clases <code>BojWidgets</code> y <code>BojTheme</code> estuvieran dentro de <code>BojGraphicalUserInterfaceOnUi</code>. De momento está así, porque estamos probando soluciones y afinando el criterio de buenas prácticas de Dart, para ver cómo se espera resolver esto (ChatGPT está ayudando, pero está dando falsas pistas también, <strong>hay que mirar la documentación oficial</strong> para irse aclarando de verdad).</p>
+</blockquote>
+<p>Este patrón antes era más largo, y con condicionales que cargaban clases o no. Pero este approach permite hacerlo sin condicionales que es como recomendaba ChatGPT.</p>
+<p>La clase final queda así:</p>
+<pre><code class="language-dart"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BojFramework</span> </span>{
+
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">String</span> environmentId;
+  <span class="hljs-keyword">late</span> BojUtils utils;
+  <span class="hljs-keyword">late</span> BojDebug debug;
+  <span class="hljs-keyword">late</span> BojWidgets widgets;
+  <span class="hljs-keyword">late</span> BojGraphicalUserInterface gui;
+  <span class="hljs-keyword">late</span> BojCommandLine cli;
+  <span class="hljs-keyword">late</span> BojServerInterface server;
+  <span class="hljs-keyword">late</span> BojTheme theme;
+
+  BojFramework(<span class="hljs-keyword">this</span>.environmentId) {
+    utils = BojUtils(<span class="hljs-keyword">this</span>);
+    debug = BojDebug(<span class="hljs-keyword">this</span>);
+    cli = BojCommandLine(<span class="hljs-keyword">this</span>);
+    server = BojServerInterface(<span class="hljs-keyword">this</span>);
+    widgets = BojWidgets(<span class="hljs-keyword">this</span>);
+    gui = BojGraphicalUserInterface(<span class="hljs-keyword">this</span>);
+    theme = BojTheme(<span class="hljs-keyword">this</span>);
+  }
+
+}
+</code></pre>
+<p>Otra cosa importante es qué tienen las clases, las vacías <code>env.any</code> y las opinionadas <code>env.ui</code> y <code>env.os</code>.</p>
+<p>La clase de los widgets, que sería la más cargada de todas, empieza así en el <code>env.any</code>:</p>
+<pre><code class="language-dart"><span class="hljs-comment">// File: lib/toolkit/boj/api/env.any/BojWidgets.dart</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;../../BojFramework.dart&#x27;</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BojWidgets</span> </span>{
+  <span class="hljs-keyword">final</span> BojFramework boj;
+
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> Box;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> HorizontalBox;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> VerticalBox;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> ControlForLine;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> ControlForMultiline;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> StatefulWidget;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> StatelessWidget;
+
+  BojWidgets(<span class="hljs-keyword">this</span>.boj);
+}
+</code></pre>
+<p>Igual puede llegar a reducirse a interfaz, o clase abstracta, para asegurarse que esta clase no se usa.</p>
+<p><strong>O incluso puede que sea posible vaciar todavía más el contenido</strong> si no lo vas a usar en código no opinionado.</p>
+<p>La clase opinionada queda así en cambio:</p>
+<pre><code class="language-dart"><span class="hljs-comment">// File: lib/toolkit/boj/api/env.ui/BojWidgetsOnUi.dart</span>
+<span class="hljs-keyword">export</span> <span class="hljs-string">&quot;../../extensions/env.ui/StyleExtensionsOnUi.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../BojFramework.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../widgets/BojBox.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../widgets/BojHorizontalBox.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../widgets/BojVerticalBox.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../widgets/BojStatefulWidget.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../widgets/BojStatelessWidget.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../widgets/BojControlForLine.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../widgets/BojControlForMultiline.dart&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;../../annotations/Expose.dart&#x27;</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BojWidgets</span> </span>{
+  <span class="hljs-keyword">final</span> BojFramework boj;
+
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> Box;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> HorizontalBox;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> VerticalBox;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> ControlForLine;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> ControlForMultiline;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> StatefulWidget;
+  <span class="hljs-keyword">late</span> <span class="hljs-built_in">Function</span> StatelessWidget;
+
+  BojWidgets(<span class="hljs-keyword">this</span>.boj) {
+    <span class="hljs-comment">// Aquí inicializamos tranquilamente las instancias internas y Dart no se quejará</span>
+    <span class="hljs-comment">// Concretamente, en el caso de los widgets, no nos interesan instancias, sino la función constructora de cada clase</span>
+    Box = BojBox.<span class="hljs-keyword">new</span>;
+    ControlForLine = BojControlForLine.<span class="hljs-keyword">new</span>;
+    ControlForMultiline = BojControlForMultiline.<span class="hljs-keyword">new</span>;
+    HorizontalBox = BojHorizontalBox.<span class="hljs-keyword">new</span>;
+    VerticalBox = BojVerticalBox.<span class="hljs-keyword">new</span>;
+    StatefulWidget = BojStatefulWidget.<span class="hljs-keyword">new</span>;
+    StatelessWidget = BojStatelessWidget.<span class="hljs-keyword">new</span>;
+  }
+
+  <span class="hljs-comment">// Esto en este caso no nos importa porque no es el tema</span>
+  <span class="hljs-meta">@Expose</span>(<span class="hljs-string">&quot;texto&quot;</span>, [])
+  <span class="hljs-keyword">void</span> hello() {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello from BojWidgets.prototype.hello:void&quot;</span>);
+  }
+
+}
+</code></pre>
+<p>Es una versión muy minimal todavía, pero ya se ve el patrón a seguir para que pueda escalar.</p>
+<p>En cuanto al sufijo <code>OnUi</code> y <code>OnOs</code> en las clases, son opcionales, pero aclaran el entorno, que es algo muy troncal.</p>
+<p>De momento, la manera oficial de permitir APIs multientorno sería esta.</p>
 <h1 id="estilos">Estilos</h1>
 <p>En esta sección trataremos cómo se manejan los estilos en Dart.</p>
 <h2 id="introducción">Introducción</h2>
@@ -802,21 +1026,25 @@ Builder bojExposersBuilder(BuilderOptions options) {
 <p>¡Perfecto!</p>
 <p>A partir de ahora ya podremos recoger datos de las anotaciones y usarlos en tiempo de ejecución, o de compilación.</p>
 <h1 id="crear-una-línea-de-comandos-simple">Crear una línea de comandos simple</h1>
-<p>Para crear una línea de comandos simple con Dart, sigue leyendo.</p>
-<h2 id="1-añadir-el-ejecutable-en-el-pubspec">1. Añadir el ejecutable en el pubspec</h2>
+<p>Para crear una línea de comandos simple con Dart, sigue los pasos que se explican a continuación.</p>
+<ul>
+<li>Paso 1. Añadir el ejecutable en el pubspec</li>
+<li>Paso 2. Añadir la clase del ejecutable</li>
+</ul>
+<h2 id="paso-1-añadir-el-ejecutable-en-el-pubspec">Paso 1. Añadir el ejecutable en el pubspec</h2>
 <p>En el <code>pubspec</code> tiene que aparecer la ruta al ejecutable global:</p>
 <pre><code class="language-yaml"><span class="hljs-comment"># Esto es para especificar un binario</span>
 <span class="hljs-attr">executables:</span>
   <span class="hljs-attr">boj:</span> <span class="hljs-string">lib/toolkit/boj/binary.dart</span>
 </code></pre>
-<h2 id="2-añadir-la-clase-del-ejecutable">2. Añadir la clase del ejecutable</h2>
+<h2 id="paso-2-añadir-la-clase-del-ejecutable">Paso 2. Añadir la clase del ejecutable</h2>
 <p>Podría estar todo en 1 clase, pero en este ejemplo vamos a hacer 1 fichero para el binario, y otro para la clase que gestiona la lógica. Esto es para diferenciar la entrada desde línea de comandos, y la API que gestiona la lógica de la línea de comandos, y poder reaprovecharla a nivel de API también.</p>
 <p>Por eso, crearemos 2 ficheros nuevos para gestionar el ejecutable:</p>
 <ul>
 <li>Clase de entrada: <code>lib/toolkit/boj/binary.dart</code></li>
 <li>Clase de lógica: <code>lib/toolkit/boj/api/BojCommandLineInterface.dart</code></li>
 </ul>
-<h3 id="clase-de-entrada-de-ejecutable">Clase de entrada de ejecutable</h3>
+<h3 id="paso-21-clase-de-entrada-de-ejecutable">Paso 2.1. Clase de entrada de ejecutable</h3>
 <p>En el fichero <code>lib/toolkit/boj/binary.dart</code> algo como:</p>
 <pre><code class="language-dart">#!/usr/bin/env dart
 
@@ -826,7 +1054,7 @@ Builder bojExposersBuilder(BuilderOptions options) {
   BojFramework.global.cli.start(args);
 }
 </code></pre>
-<h3 id="clase-de-lógica-de-ejecutable">Clase de lógica de ejecutable</h3>
+<h3 id="paso-22-clase-de-lógica-de-ejecutable">Paso 2.2. Clase de lógica de ejecutable</h3>
 <p>Continuaríamos en otro fichero <code>lib/toolkit/boj/api/BojCommandLineInterface.dart</code>:</p>
 <pre><code class="language-dart"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:fluttagenda/toolkit/boj/BojFramework.dart&#x27;</span>;
 
@@ -842,6 +1070,13 @@ Builder bojExposersBuilder(BuilderOptions options) {
 
 }
 </code></pre>
+<h3 id="paso-3-instalar-ejecutable">Paso 3. Instalar ejecutable</h3>
+<p>Con esto se instala:</p>
+<pre><code class="language-sh">dart pub global activate --<span class="hljs-built_in">source</span> path .
+</code></pre>
+<p>Le hemos dicho que se llama <code>boj</code> en el pubspec, así que podremos usarlo desde línea de comandos:</p>
+<pre><code class="language-sh">boj subc1 subc2 --flag --text=whatever --param1 t1 t2 t3 --param2=<span class="hljs-literal">false</span> --param3=200
+</code></pre>
 <h1 id="crear-una-línea-de-comandos-con-endpoints-dinámicos">Crear una línea de comandos con endpoints dinámicos</h1>
 <p>Linea de comandos con endpoints dinámicos basados en JSON.</p>
 <h1 id="crear-un-servidor-simple">Crear un servidor simple</h1>
@@ -852,6 +1087,354 @@ Builder bojExposersBuilder(BuilderOptions options) {
 <p>Rutas con endpoints dinámicos basados en JSON.</p>
 <h1 id="crear-rutas-de-aplicación-cliente-con-endpoints-dinámicos">Crear rutas de aplicación cliente con endpoints dinámicos</h1>
 <p>Rutas con endpoints dinámicos basados en JSON.</p>
+<h1 id="patrón-singleton-en-static-inicializado-en-el-primer-constructor">Patrón singleton en static inicializado en el primer constructor</h1>
+<p>Este patrón es para que:</p>
+<h1 id="crear-un-switcher-funcional-multidimensional-o-árbol-funcional">Crear un switcher funcional multidimensional o árbol funcional</h1>
+<h2 id="qué-necesidad">¿Qué necesidad?</h2>
+<p>La necesidad del switcher funcional multidimensional o árbol funcional es:</p>
+<blockquote>
+<p>Dinamizar el acceso a datos ordenados.</p>
+</blockquote>
+<p>Esto tiene 1 pro y 1 contra:</p>
+<ul>
+<li>PRO: Permite que en runtime se puedan acceder a diferentes tipos de variables.</li>
+<li>CONTRA: Rompe la tipación de Dart</li>
+</ul>
+<p>Pero los pros continúan, así que no me voy a parar a debatir aquí.</p>
+<h2 id="la-clase-functionaltree">La clase FunctionalTree</h2>
+<p>Con esta clase:</p>
+<ul>
+<li>Dinamizamos el acceso a datos</li>
+<li>Dinamizamos la llamada a funciones</li>
+</ul>
+<p>Esto es el core de un lenguaje de scripting on-top-of. El único requisito en Dart es este:</p>
+<blockquote>
+<p>Los datos deben ser <code>Map</code>, <code>List</code>, <code>Function</code> o primitivos.</p>
+</blockquote>
+<h2 id="objetivo">Objetivo</h2>
+<p>El objetivos intermedios se configuran como construir una API:</p>
+<ul>
+<li><em>basada en árbol y funciones</em></li>
+<li><strong>no basada clases y métodos</strong></li>
+</ul>
+<p>La distinción es sutil, pero contundente en el runtime:</p>
+<ul>
+<li>los mapas se pueden inspeccionar y alterar en runtime
+<ul>
+<li>y los árboles no</li>
+</ul>
+</li>
+<li>las funciones se pueden inspeccionar y alterar en runtime
+<ul>
+<li>y los métodos no</li>
+</ul>
+</li>
+</ul>
+<p>Perdemos rigor y formalidad en el código, pero solamente hasta cierto punto:</p>
+<ul>
+<li>porque tú por dentro de las funciones puedes seguir aprovechándote de los tipos</li>
+<li>porque tú incluso puedes decorar el árbol con instancias de clases</li>
+</ul>
+<p>Lo que va a dar problemas es:</p>
+<ul>
+<li>decorar el árbol con clases o métodos.</li>
+</ul>
+<p>Esto es lo que despierta una de las grandes desventajas de este acercamiento:</p>
+<ul>
+<li>no es un introspector de clases ni métodos</li>
+<li>no usa la reflection/mirrors de dart</li>
+<li>no explora el árbol de clases ya cargado en memoria</li>
+<li>únicamente te permite dinamizar el acceso, la modificación y la ejecución dentro de una estructura tipo Map.</li>
+</ul>
+<p>Pero es una solución muy óptima en comparación porque:</p>
+<ul>
+<li>evitamos arrastrar toda la lógica necesaria para hacer ingeniería inversa de:
+<ul>
+<li>lo que puede haber en una clase Dart</li>
+<li>lo que puede haber en una propiedad de clase Dart</li>
+<li>lo que puede haber en un método de clase Dart</li>
+<li>incluyendo lógica de tipos, herencia, anotaciones, etc.</li>
+</ul>
+</li>
+<li>sin embargo, igualmente conseguimos:
+<ul>
+<li>el acceso dinámico en runtime</li>
+<li>la modificación dinámica en runtime</li>
+<li>la ejecución dinámica en runtime</li>
+<li>y todo con la menor huella en memoria posible: mapas, funciones y un par de hacks que permite Dart.</li>
+</ul>
+</li>
+</ul>
+<p>Por eso, es una buena opción.</p>
+<p>Lo siguiente es articular ya un lenguaje de scripting, para cubrir todos los bindings de bajo nivel con strings. Pero:</p>
+<blockquote>
+<p>Entre esta clase, más o menos sencilla, y un lenguaje de scripting full-equiped, hay una notoria y considerable complejidad, tanto desde la perspectiva humana como de la computación.</p>
+</blockquote>
+<p>Y por esa diferencia de coste, esta estructura es importante:</p>
+<blockquote>
+<p>Dinamizar datos y ejecución en runtime con una clase mínima.</p>
+</blockquote>
+<h2 id="lo-que-no-es">Lo que no es</h2>
+<p>Esta clase no es:</p>
+<ul>
+<li>una herramienta de reflexión/introspección:
+<ul>
+<li>no nos sirve para explorar nada de dart</li>
+<li>solamente de nuestras estructuras concretadas por nosotros</li>
+</ul>
+</li>
+<li>una herramienta de scripting:
+<ul>
+<li>no es un lenguaje full-equiped</li>
+<li>solamente nos permite coger, dejar y ejecutar</li>
+</ul>
+</li>
+</ul>
+<p>Para hacer reflexión:</p>
+<ul>
+<li>tendríamos que tirar de <code>dart:mirrors</code> que pierde compatibilidad con Flutter</li>
+<li>tendríamos que lidiar con otra API más, incorporarla como dependencia, etc.</li>
+</ul>
+<p>Para hacer scripting:</p>
+<ul>
+<li>tendríamos que tirar de un parser</li>
+<li>tendríamos que impactar la performance con parsing en runtime</li>
+<li>tendríamos que:
+<ul>
+<li>o tener bridges, que si no hay <code>dart:mirrors</code> no es posible</li>
+<li>o usar otra historieta que corra en paralelo, como creo que promete <code>quickjs</code> o <code>esprima</code> o otros varios.</li>
+<li>o empezar desde aquí: un par de functional trees.</li>
+</ul>
+</li>
+</ul>
+<p>La reflexión es tentadora, pero si no hay compatibilidad con flutter, no tiene sentido, porque flutter es la razón gorda de dart.</p>
+<p>Y el scripting es una batalla épica que probablemente acabaría perdiendo porque es muy vasto, y probablemente haya algo pero todavía no hemos dado con ello, porque lo que dicen que hay, tal como lo han explicado que funciona, no es lo mismo, no interesa tanto. No interesa instalar un engine de js externo si luego no deja acceder a absolutamente todas las cosas de Dart. Y en este paso, cae la reflection, que está vetada.</p>
+<p>Así que en resumidas cuentas, no es una necesidad, pero sí es interesante hacer dinámicas estas 3 operaciones:</p>
+<ul>
+<li>coger</li>
+<li>dejar</li>
+<li>ejecutar</li>
+</ul>
+<p>Y las otras soluciones son muy desproporcionadas.</p>
+<p>Esta clase resuelve eso.</p>
+<h3 id="test-de-functionaltree">Test de FunctionalTree</h3>
+<p>El test es este:</p>
+<pre><code class="language-dart">#!/usr/bin/env dart
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;./FunctionalTree.dart&#x27;</span>;
+
+<span class="hljs-keyword">void</span> main(<span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt; args) {
+  test();
+}
+
+<span class="hljs-built_in">dynamic</span> boj = FunctionalTree({
+  <span class="hljs-string">&quot;version&quot;</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
+  <span class="hljs-string">&quot;gui&quot;</span>: {
+    <span class="hljs-string">&quot;start&quot;</span>: () {
+      <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;boj.gui.start&quot;</span>);
+    },
+  },
+  <span class="hljs-string">&quot;cli&quot;</span>: {
+    <span class="hljs-string">&quot;mask&quot;</span>: {},
+    <span class="hljs-string">&quot;whatever&quot;</span>: (<span class="hljs-built_in">dynamic</span> a, <span class="hljs-built_in">dynamic</span> b) {
+      <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;boj.cli.whatever&quot;</span>);
+      <span class="hljs-built_in">print</span>(a + b);
+      <span class="hljs-keyword">return</span> a + b;
+    },
+  },
+});
+
+<span class="hljs-keyword">void</span> test() {
+  <span class="hljs-comment">// Funcionaría sin el hack noSuchMethod:</span>
+  boj[<span class="hljs-string">&quot;gui&quot;</span>][<span class="hljs-string">&quot;start&quot;</span>]();
+  boj[<span class="hljs-string">&quot;cli&quot;</span>][<span class="hljs-string">&quot;whatever&quot;</span>](<span class="hljs-number">5</span>, <span class="hljs-number">10</span>);
+  <span class="hljs-comment">// Funciona, pero no funcionaría sin el hack noSuchMethod:</span>
+  boj.gui.start();
+  boj.cli.whatever(<span class="hljs-number">5</span>, <span class="hljs-number">16</span>);
+  <span class="hljs-comment">// Get:</span>
+  <span class="hljs-built_in">dynamic</span> w1 = boj.<span class="hljs-keyword">get</span>([<span class="hljs-string">&quot;cli&quot;</span>, <span class="hljs-string">&quot;whatever&quot;</span>]);
+  <span class="hljs-keyword">if</span> (w1 <span class="hljs-keyword">is</span>! <span class="hljs-built_in">Function</span>) {
+    <span class="hljs-keyword">throw</span> Exception(<span class="hljs-string">&quot;var cli.whatever should be a function&quot;</span>);
+  }
+  <span class="hljs-comment">// Set:</span>
+  boj.<span class="hljs-keyword">set</span>([<span class="hljs-string">&quot;cli&quot;</span>, <span class="hljs-string">&quot;whatever&quot;</span>], <span class="hljs-number">900</span>);
+  <span class="hljs-keyword">if</span> (boj.cli.whatever != <span class="hljs-number">900</span>) {
+    <span class="hljs-keyword">throw</span> Exception(<span class="hljs-string">&quot;var cli.whatever should be 900&quot;</span>);
+  }
+  <span class="hljs-comment">// Init:</span>
+  boj.init([<span class="hljs-string">&quot;cli&quot;</span>, <span class="hljs-string">&quot;whatever&quot;</span>], <span class="hljs-number">899</span>);
+  <span class="hljs-keyword">if</span> (boj.cli.whatever != <span class="hljs-number">900</span>) {
+    <span class="hljs-keyword">throw</span> Exception(<span class="hljs-string">&quot;var cli.whatever should still be 900&quot;</span>);
+  }
+  <span class="hljs-comment">// Delete:</span>
+  boj.delete([<span class="hljs-string">&quot;cli&quot;</span>, <span class="hljs-string">&quot;whatever&quot;</span>]);
+  <span class="hljs-comment">// Has:</span>
+  <span class="hljs-built_in">bool</span> stillExists = boj.has([<span class="hljs-string">&quot;cli&quot;</span>, <span class="hljs-string">&quot;whatever&quot;</span>]);
+  <span class="hljs-keyword">if</span> (stillExists) {
+    <span class="hljs-keyword">throw</span> Exception(<span class="hljs-string">&quot;var cli.whatever should not exist&quot;</span>);
+  }
+  <span class="hljs-comment">// List:</span>
+  <span class="hljs-built_in">dynamic</span> w2 = boj.list([<span class="hljs-string">&quot;cli&quot;</span>]);
+  <span class="hljs-keyword">if</span>(w2[<span class="hljs-number">0</span>] != <span class="hljs-string">&quot;mask&quot;</span>) {
+    <span class="hljs-keyword">throw</span> Exception(<span class="hljs-string">&quot;var cli should have mask as first and unique key&quot;</span>);
+  }
+  <span class="hljs-built_in">print</span>(w2);
+
+}
+</code></pre>
+<h3 id="implementación-final-de-functionaltree">Implementación final de FunctionalTree</h3>
+<p>La implementación actual es esta, que la dejamos en <code>FunctionalTree.dart</code>:</p>
+<pre><code class="language-dart"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TreeWrapper</span> </span>{
+
+  <span class="hljs-keyword">final</span> <span class="hljs-built_in">Map</span> _root;
+
+  TreeWrapper(<span class="hljs-keyword">this</span>._root);
+
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AccessibleTree</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TreeWrapper</span> </span>{
+
+  AccessibleTree(<span class="hljs-keyword">super</span>.root);
+
+  <span class="hljs-built_in">dynamic</span> <span class="hljs-keyword">get</span>(<span class="hljs-built_in">List</span> path) {
+    <span class="hljs-built_in">Map</span> current = _root;
+    <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; path.length; i++) {
+      <span class="hljs-built_in">Object</span> key = path[i];
+      <span class="hljs-keyword">if</span> (!current.containsKey(key)) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+      }
+      <span class="hljs-keyword">var</span> value = current[key];
+      <span class="hljs-keyword">if</span> (i == path.length - <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span> <span class="hljs-built_in">Map</span>) {
+          <span class="hljs-keyword">return</span> FunctionalTree(value);
+        }
+        <span class="hljs-keyword">return</span> value;
+      }
+      <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span>! <span class="hljs-built_in">Map</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+      }
+      current = value;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+  }
+
+  <span class="hljs-keyword">void</span> <span class="hljs-keyword">set</span>(<span class="hljs-built_in">List</span> path, <span class="hljs-built_in">dynamic</span> value) {
+    <span class="hljs-built_in">Map</span> current = _root;
+    <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; path.length - <span class="hljs-number">1</span>; i++) {
+      <span class="hljs-built_in">Object</span> key = path[i];
+      <span class="hljs-keyword">if</span> (!current.containsKey(key) || current[key] <span class="hljs-keyword">is</span>! <span class="hljs-built_in">Map</span>) {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+    <span class="hljs-built_in">Object</span> lastKey = path[path.length - <span class="hljs-number">1</span>];
+    current[lastKey] = value;
+  }
+
+  <span class="hljs-keyword">void</span> init(<span class="hljs-built_in">List</span> path, <span class="hljs-built_in">dynamic</span> value) {
+    <span class="hljs-built_in">Map</span> current = _root;
+    <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; path.length - <span class="hljs-number">1</span>; i++) {
+      <span class="hljs-built_in">Object</span> key = path[i];
+      <span class="hljs-keyword">if</span> (!current.containsKey(key) || current[key] <span class="hljs-keyword">is</span>! <span class="hljs-built_in">Map</span>) {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+    <span class="hljs-built_in">Object</span> lastKey = path[path.length - <span class="hljs-number">1</span>];
+    <span class="hljs-keyword">if</span> (!current.containsKey(lastKey)) {
+      current[lastKey] = value;
+    }
+  }
+
+  <span class="hljs-keyword">void</span> delete(<span class="hljs-built_in">List</span> path) {
+    <span class="hljs-built_in">Map</span> current = _root;
+    <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; path.length - <span class="hljs-number">1</span>; i++) {
+      <span class="hljs-built_in">Object</span> key = path[i];
+      <span class="hljs-keyword">if</span> (!current.containsKey(key)) {
+        <span class="hljs-keyword">return</span>;
+      }
+      <span class="hljs-keyword">var</span> value = current[key];
+      <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span>! <span class="hljs-built_in">Map</span>) {
+        <span class="hljs-keyword">return</span>;
+      }
+      current = value;
+    }
+    <span class="hljs-built_in">Object</span> lastKey = path[path.length - <span class="hljs-number">1</span>];
+    current.remove(lastKey);
+  }
+
+  <span class="hljs-built_in">bool</span> has(<span class="hljs-built_in">List</span> path) {
+    <span class="hljs-built_in">Map</span> current = _root;
+    <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; path.length; i++) {
+      <span class="hljs-built_in">Object</span> key = path[i];
+      <span class="hljs-keyword">if</span> (!current.containsKey(key)) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+      }
+      <span class="hljs-keyword">var</span> value = current[key];
+      <span class="hljs-keyword">if</span> (i == path.length - <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+      }
+      <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span>! <span class="hljs-built_in">Map</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+      }
+      current = value;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+  }
+
+  <span class="hljs-built_in">dynamic</span> list(<span class="hljs-built_in">List</span> path) {
+    <span class="hljs-keyword">var</span> value = <span class="hljs-keyword">get</span>(path);
+    <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span> FunctionalTree) {
+      <span class="hljs-keyword">return</span> value._root.keys.toList();
+    }
+    <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span> <span class="hljs-built_in">Map</span>) {
+      <span class="hljs-keyword">return</span> value.keys.toList();
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+  }
+
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FunctionalTree</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AccessibleTree</span> </span>{
+
+  FunctionalTree(<span class="hljs-keyword">super</span>.root);
+
+  <span class="hljs-built_in">dynamic</span> <span class="hljs-keyword">operator</span> [](<span class="hljs-built_in">Object</span> key) {
+    <span class="hljs-keyword">var</span> value = _root[key];
+    <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span> <span class="hljs-built_in">Map</span>) {
+      <span class="hljs-keyword">return</span> FunctionalTree(value);
+    }
+    <span class="hljs-keyword">return</span> value;
+  }
+
+  <span class="hljs-meta">@override</span>
+  <span class="hljs-built_in">dynamic</span> noSuchMethod(Invocation invocation) {
+    <span class="hljs-built_in">String</span> name = invocation.memberName.toString();
+    name = name.substring(<span class="hljs-number">8</span>, name.length - <span class="hljs-number">2</span>);
+    <span class="hljs-keyword">if</span> (invocation.isGetter) {
+      <span class="hljs-keyword">var</span> value = _root[name];
+      <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span> <span class="hljs-built_in">Map</span>) {
+        <span class="hljs-keyword">return</span> FunctionalTree(value);
+      }
+      <span class="hljs-keyword">return</span> value;
+    }
+    <span class="hljs-keyword">if</span> (invocation.isMethod) {
+      <span class="hljs-keyword">var</span> callback = _root[name];
+
+      <span class="hljs-keyword">if</span> (callback <span class="hljs-keyword">is</span> <span class="hljs-built_in">Function</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Function</span>.apply(callback, invocation.positionalArguments);
+      }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.noSuchMethod(invocation);
+  }
+
+}
+</code></pre>
 <h1 id="json-parse-y-stringify">JSON parse y stringify</h1>
 <pre><code class="language-dart"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;dart:convert&#x27;</span>;
 

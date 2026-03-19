@@ -15,6 +15,12 @@ Chuleta para el lenguaje de Dart.
     - [Herencia con interfaces (implements)](#herencia-con-interfaces-implements)
     - [Las anteriores combinadas a la vez](#las-anteriores-combinadas-a-la-vez)
     - [Un ejemplo práctico](#un-ejemplo-práctico)
+ - [Modulación con imports y exports](#modulación-con-imports-y-exports)
+    - [Técnicas específicas](#técnicas-específicas)
+       - [Consejo 1. Usar import con rutas relativas es mejor que con rutas de paquete](#consejo-1-usar-import-con-rutas-relativas-es-mejor-que-con-rutas-de-paquete)
+       - [Consejo 2. Imports condicionales para clases opinionadas en entorno](#consejo-2-imports-condicionales-para-clases-opinionadas-en-entorno)
+          - [Punto 1. Las 3 carpetas de entorno](#punto-1-las-3-carpetas-de-entorno)
+          - [Punto 2. Los imports condicionales en los puntos de entrada más altos](#punto-2-los-imports-condicionales-en-los-puntos-de-entrada-más-altos)
  - [Estilos](#estilos)
     - [Introducción](#introducción)
     - [Componentes estilizantes](#componentes-estilizantes)
@@ -40,15 +46,24 @@ Chuleta para el lenguaje de Dart.
     - [Paso 5. Añadir las anotaciones en el código importando la anotación](#paso-5-añadir-las-anotaciones-en-el-código-importando-la-anotación)
     - [Paso 6. Buildear](#paso-6-buildear)
  - [Crear una línea de comandos simple](#crear-una-línea-de-comandos-simple)
-    - [ Añadir el ejecutable en el pubspec](#1-añadir-el-ejecutable-en-el-pubspec)
-    - [ Añadir la clase del ejecutable](#2-añadir-la-clase-del-ejecutable)
-       - [Clase de entrada de ejecutable](#clase-de-entrada-de-ejecutable)
-       - [Clase de lógica de ejecutable](#clase-de-lógica-de-ejecutable)
+    - [Paso 1. Añadir el ejecutable en el pubspec](#paso-1-añadir-el-ejecutable-en-el-pubspec)
+    - [Paso 2. Añadir la clase del ejecutable](#paso-2-añadir-la-clase-del-ejecutable)
+       - [Paso 2.1. Clase de entrada de ejecutable](#paso-21-clase-de-entrada-de-ejecutable)
+       - [Paso 2.2. Clase de lógica de ejecutable](#paso-22-clase-de-lógica-de-ejecutable)
+       - [Paso 3. Instalar ejecutable](#paso-3-instalar-ejecutable)
  - [Crear una línea de comandos con endpoints dinámicos](#crear-una-línea-de-comandos-con-endpoints-dinámicos)
  - [Crear un servidor simple](#crear-un-servidor-simple)
  - [Crear un servidor con endpoints dinámicos](#crear-un-servidor-con-endpoints-dinámicos)
  - [Crear rutas de aplicación cliente simple](#crear-rutas-de-aplicación-cliente-simple)
  - [Crear rutas de aplicación cliente con endpoints dinámicos](#crear-rutas-de-aplicación-cliente-con-endpoints-dinámicos)
+ - [Patrón singleton en static inicializado en el primer constructor](#patrón-singleton-en-static-inicializado-en-el-primer-constructor)
+ - [Crear un switcher funcional multidimensional o árbol funcional](#crear-un-switcher-funcional-multidimensional-o-árbol-funcional)
+    - [¿Qué necesidad?](#qué-necesidad)
+    - [La clase FunctionalTree](#la-clase-functionaltree)
+    - [Objetivo](#objetivo)
+    - [Lo que no es](#lo-que-no-es)
+       - [Test de FunctionalTree](#test-de-functionaltree)
+       - [Implementación final de FunctionalTree](#implementación-final-de-functionaltree)
  - [JSON parse y stringify](#json-parse-y-stringify)
 
 
@@ -410,6 +425,210 @@ function main() {
 main();
 ```
 
+#  Modulación con imports y exports
+
+Las técnicas de import y export de módulos de Dart te interesa entenderlas bien porque son la clave de la modulación.
+
+Según qué utilices y cómo, resulta en una cosa u otra.
+
+## Técnicas específicas
+
+En esta sección voy a hacer una lista de las técnicas de uso de **import** y **export** que parecen haber funcionado en los primeros pasos al menos.
+
+### Consejo 1. Usar import con rutas relativas es mejor que con rutas de paquete
+
+Con los `imports` con sus rutas relativas, el entorno del `cli` puede importar los ficheros sin conocer el proyecto.
+
+Aquí se ven las 2 formas de importar:
+
+```dart
+// Rutas relativas son así:
+import "ruta/a/fichero.dart";
+import "./ruta/a/fichero.dart";
+import "../ruta/a/fichero.dart";
+// Rutas de paquete son así:
+import "package:mipaquete/ruta/relativa/desde/lib/a/fichero.dart";
+```
+
+Si en el `pubspec.yaml#name` tienes `mipaquete`, puedes usarlo como ruta relativa global.
+
+Pero pierdes eso, que un binario satelital pueda importar el framework sin conocer el proyecto.
+
+Por eso, de momento al menos, rutas relativas, **pese a lo que diga ChatGPT**.
+
+### Consejo 2. Imports condicionales para clases opinionadas en entorno
+
+Cuando digo entorno, me refiero a 2 casos principalmente:
+
+- `os`: caso de aplicación de sistema operativo (linux, windows, etc.)
+   - discriminable con `import "pascual" if (dart.library.io);`
+- `ui`: caso de aplicación de interfaz de usuario (web, android, gtk, win, etc.)
+   - discriminable con `import "pascual" if (dart.library.ui);`
+
+#### Punto 1. Las 3 carpetas de entorno
+
+En cualquier punto de la estructura de ficheros de la API, deberías poder meter 3 carpetas:
+
+- `env.any`
+   - Aquí irán las clases/interfaces comunes en cualquier entorno
+   - Normalmente serán clases vacías
+- `env.os`
+   - Aquí irán las clases/interfaces que solo cargarán en entorno `os`
+- `env.ui`
+   - Aquí irán las clases/interfaces que solo cargarán en entorno `ui`
+
+#### Punto 2. Los imports condicionales en los puntos de entrada más altos
+
+
+
+Para que no toda la API tenga siempre que estar bajo la carpeta `env.ui`, lo que haces es:
+
+- Solo poner dentro de `env.ui` las clases que se requieren en el código no opinionado en entorno.
+   - A esto me refiero con el punto de entrada más alto
+      - Al punto más alto del árbol donde se enganchan con la API no opinionada de entorno (la básica).
+   - Estas clases sí se tienen que usar con imports condicionales
+   - Porque estarán accesibles desde el código no opinionado en entorno y hay que resolvérselas
+   - Pero más allá:
+- La API opinionada en entorno, ponerla en otra carpeta
+   - **SIN USAR IMPORTS CONDICIONALES**
+   - La prueba final de que lo haces bien es que:
+      - La aplicación sigue funcionando bien en distintos entornos
+      - Pero estas clases (de API opinionada en entorno) ya no usan `import + if`
+      - *Porque la clase de la que cuelgan no va a usar ninguno de esos métodos o propiedades* y Dart no se quejará
+      - Solo en código entorno-opinionado se verán explotadas esas clases.
+
+El código de los imports queda así:
+
+```dart
+import "api/BojDebug.dart";
+import "api/BojUtils.dart";
+import "api/BojCommandLine.dart";
+import "api/env.any/BojWidgets.dart" if (dart.library.ui) "api/env.ui/BojWidgetsOnUi.dart";
+import "api/env.any/BojServer.dart" if (dart.library.io) "api/env.os/BojServerOnOs.dart";
+import "api/env.any/BojGraphicalUserInterface.dart" if (dart.library.ui) "api/env.ui/BojGraphicalUserInterfaceOnUi.dart";
+import "api/env.any/BojTheme.dart" if (dart.library.ui) "api/env.ui/BojThemeOnUi.dart";
+
+// Exportar extensiones:
+export "extensions/env.any/StyleExtensions.dart" if (dart.library.ui) "extensions/env.ui/StyleExtensionsOnUi.dart";
+```
+
+Ahora mismo, está así así. Seguramente, lo ideal máximo es reducir a 1 solo:
+
+- `if(dart.library.ui) "api-grafica.dart"`
+
+Ahora mismo hay varias capas de alto nivel que incurren ahí, y por eso hay varios imports condicionales.
+
+> Seguramente, lo mejor fuera que las clases `BojWidgets` y `BojTheme` estuvieran dentro de `BojGraphicalUserInterfaceOnUi`. De momento está así, porque estamos probando soluciones y afinando el criterio de buenas prácticas de Dart, para ver cómo se espera resolver esto (ChatGPT está ayudando, pero está dando falsas pistas también, **hay que mirar la documentación oficial** para irse aclarando de verdad).
+
+Este patrón antes era más largo, y con condicionales que cargaban clases o no. Pero este approach permite hacerlo sin condicionales que es como recomendaba ChatGPT.
+
+La clase final queda así:
+
+```dart
+class BojFramework {
+
+  late String environmentId;
+  late BojUtils utils;
+  late BojDebug debug;
+  late BojWidgets widgets;
+  late BojGraphicalUserInterface gui;
+  late BojCommandLine cli;
+  late BojServerInterface server;
+  late BojTheme theme;
+
+  BojFramework(this.environmentId) {
+    utils = BojUtils(this);
+    debug = BojDebug(this);
+    cli = BojCommandLine(this);
+    server = BojServerInterface(this);
+    widgets = BojWidgets(this);
+    gui = BojGraphicalUserInterface(this);
+    theme = BojTheme(this);
+  }
+
+}
+```
+
+Otra cosa importante es qué tienen las clases, las vacías `env.any` y las opinionadas `env.ui` y `env.os`.
+
+La clase de los widgets, que sería la más cargada de todas, empieza así en el `env.any`:
+
+```dart
+// File: lib/toolkit/boj/api/env.any/BojWidgets.dart
+import '../../BojFramework.dart';
+
+class BojWidgets {
+  final BojFramework boj;
+
+  late Function Box;
+  late Function HorizontalBox;
+  late Function VerticalBox;
+  late Function ControlForLine;
+  late Function ControlForMultiline;
+  late Function StatefulWidget;
+  late Function StatelessWidget;
+
+  BojWidgets(this.boj);
+}
+```
+
+Igual puede llegar a reducirse a interfaz, o clase abstracta, para asegurarse que esta clase no se usa.
+
+**O incluso puede que sea posible vaciar todavía más el contenido** si no lo vas a usar en código no opinionado.
+
+La clase opinionada queda así en cambio:
+
+```dart
+// File: lib/toolkit/boj/api/env.ui/BojWidgetsOnUi.dart
+export "../../extensions/env.ui/StyleExtensionsOnUi.dart";
+import "../../BojFramework.dart";
+import "../../widgets/BojBox.dart";
+import "../../widgets/BojHorizontalBox.dart";
+import "../../widgets/BojVerticalBox.dart";
+import "../../widgets/BojStatefulWidget.dart";
+import "../../widgets/BojStatelessWidget.dart";
+import "../../widgets/BojControlForLine.dart";
+import "../../widgets/BojControlForMultiline.dart";
+import '../../annotations/Expose.dart';
+
+class BojWidgets {
+  final BojFramework boj;
+
+  late Function Box;
+  late Function HorizontalBox;
+  late Function VerticalBox;
+  late Function ControlForLine;
+  late Function ControlForMultiline;
+  late Function StatefulWidget;
+  late Function StatelessWidget;
+
+  BojWidgets(this.boj) {
+    // Aquí inicializamos tranquilamente las instancias internas y Dart no se quejará
+    // Concretamente, en el caso de los widgets, no nos interesan instancias, sino la función constructora de cada clase
+    Box = BojBox.new;
+    ControlForLine = BojControlForLine.new;
+    ControlForMultiline = BojControlForMultiline.new;
+    HorizontalBox = BojHorizontalBox.new;
+    VerticalBox = BojVerticalBox.new;
+    StatefulWidget = BojStatefulWidget.new;
+    StatelessWidget = BojStatelessWidget.new;
+  }
+
+  // Esto en este caso no nos importa porque no es el tema
+  @Expose("texto", [])
+  void hello() {
+    print("Hello from BojWidgets.prototype.hello:void");
+  }
+
+}
+```
+
+Es una versión muy minimal todavía, pero ya se ve el patrón a seguir para que pueda escalar.
+
+En cuanto al sufijo `OnUi` y `OnOs` en las clases, son opcionales, pero aclaran el entorno, que es algo muy troncal.
+
+De momento, la manera oficial de permitir APIs multientorno sería esta.
+
 #  Estilos
 
 En esta sección trataremos cómo se manejan los estilos en Dart.
@@ -754,9 +973,12 @@ A partir de ahora ya podremos recoger datos de las anotaciones y usarlos en tiem
 
 #  Crear una línea de comandos simple
 
-Para crear una línea de comandos simple con Dart, sigue leyendo.
+Para crear una línea de comandos simple con Dart, sigue los pasos que se explican a continuación.
 
-## 1. Añadir el ejecutable en el pubspec
+- Paso 1. Añadir el ejecutable en el pubspec
+- Paso 2. Añadir la clase del ejecutable
+
+## Paso 1. Añadir el ejecutable en el pubspec
 
 En el `pubspec` tiene que aparecer la ruta al ejecutable global:
 
@@ -766,7 +988,7 @@ executables:
   boj: lib/toolkit/boj/binary.dart
 ```
 
-## 2. Añadir la clase del ejecutable
+## Paso 2. Añadir la clase del ejecutable
 
 Podría estar todo en 1 clase, pero en este ejemplo vamos a hacer 1 fichero para el binario, y otro para la clase que gestiona la lógica. Esto es para diferenciar la entrada desde línea de comandos, y la API que gestiona la lógica de la línea de comandos, y poder reaprovecharla a nivel de API también.
 
@@ -775,7 +997,7 @@ Por eso, crearemos 2 ficheros nuevos para gestionar el ejecutable:
 - Clase de entrada: `lib/toolkit/boj/binary.dart`
 - Clase de lógica: `lib/toolkit/boj/api/BojCommandLineInterface.dart`
 
-### Clase de entrada de ejecutable
+### Paso 2.1. Clase de entrada de ejecutable
 
 En el fichero `lib/toolkit/boj/binary.dart` algo como:
 
@@ -789,7 +1011,7 @@ void main(List<String> args) {
 }
 ```
 
-### Clase de lógica de ejecutable
+### Paso 2.2. Clase de lógica de ejecutable
 
 Continuaríamos en otro fichero `lib/toolkit/boj/api/BojCommandLineInterface.dart`:
 
@@ -807,6 +1029,20 @@ class BojCommandLineInterface {
   }
 
 }
+```
+
+### Paso 3. Instalar ejecutable
+
+Con esto se instala:
+
+```sh
+dart pub global activate --source path .
+```
+
+Le hemos dicho que se llama `boj` en el pubspec, así que podremos usarlo desde línea de comandos:
+
+```sh
+boj subc1 subc2 --flag --text=whatever --param1 t1 t2 t3 --param2=false --param3=200
 ```
 
 #  Crear una línea de comandos con endpoints dinámicos
@@ -828,6 +1064,354 @@ Rutas con endpoints dinámicos basados en JSON.
 #  Crear rutas de aplicación cliente con endpoints dinámicos
 
 Rutas con endpoints dinámicos basados en JSON.
+
+#  Patrón singleton en static inicializado en el primer constructor
+
+Este patrón es para que:
+
+#  Crear un switcher funcional multidimensional o árbol funcional
+
+## ¿Qué necesidad?
+
+La necesidad del switcher funcional multidimensional o árbol funcional es:
+
+> Dinamizar el acceso a datos ordenados.
+
+Esto tiene 1 pro y 1 contra:
+
+- PRO: Permite que en runtime se puedan acceder a diferentes tipos de variables.
+- CONTRA: Rompe la tipación de Dart
+
+Pero los pros continúan, así que no me voy a parar a debatir aquí.
+
+## La clase FunctionalTree
+
+Con esta clase:
+
+- Dinamizamos el acceso a datos
+- Dinamizamos la llamada a funciones
+
+Esto es el core de un lenguaje de scripting on-top-of. El único requisito en Dart es este:
+
+> Los datos deben ser `Map`, `List`, `Function` o primitivos.
+
+## Objetivo
+
+El objetivos intermedios se configuran como construir una API:
+
+- *basada en árbol y funciones*
+- **no basada clases y métodos**
+
+La distinción es sutil, pero contundente en el runtime:
+
+- los mapas se pueden inspeccionar y alterar en runtime
+   - y los árboles no
+- las funciones se pueden inspeccionar y alterar en runtime
+   - y los métodos no
+
+Perdemos rigor y formalidad en el código, pero solamente hasta cierto punto:
+
+- porque tú por dentro de las funciones puedes seguir aprovechándote de los tipos
+- porque tú incluso puedes decorar el árbol con instancias de clases
+
+Lo que va a dar problemas es:
+
+- decorar el árbol con clases o métodos.
+
+Esto es lo que despierta una de las grandes desventajas de este acercamiento:
+
+- no es un introspector de clases ni métodos
+- no usa la reflection/mirrors de dart
+- no explora el árbol de clases ya cargado en memoria
+- únicamente te permite dinamizar el acceso, la modificación y la ejecución dentro de una estructura tipo Map.
+
+Pero es una solución muy óptima en comparación porque:
+
+- evitamos arrastrar toda la lógica necesaria para hacer ingeniería inversa de:
+   - lo que puede haber en una clase Dart
+   - lo que puede haber en una propiedad de clase Dart
+   - lo que puede haber en un método de clase Dart
+   - incluyendo lógica de tipos, herencia, anotaciones, etc.
+- sin embargo, igualmente conseguimos:
+   - el acceso dinámico en runtime
+   - la modificación dinámica en runtime
+   - la ejecución dinámica en runtime
+   - y todo con la menor huella en memoria posible: mapas, funciones y un par de hacks que permite Dart.
+
+Por eso, es una buena opción.
+
+Lo siguiente es articular ya un lenguaje de scripting, para cubrir todos los bindings de bajo nivel con strings. Pero:
+
+> Entre esta clase, más o menos sencilla, y un lenguaje de scripting full-equiped, hay una notoria y considerable complejidad, tanto desde la perspectiva humana como de la computación.
+
+Y por esa diferencia de coste, esta estructura es importante:
+
+> Dinamizar datos y ejecución en runtime con una clase mínima.
+
+## Lo que no es
+
+Esta clase no es:
+
+- una herramienta de reflexión/introspección:
+   - no nos sirve para explorar nada de dart
+   - solamente de nuestras estructuras concretadas por nosotros
+- una herramienta de scripting:
+   - no es un lenguaje full-equiped
+   - solamente nos permite coger, dejar y ejecutar
+
+Para hacer reflexión:
+
+- tendríamos que tirar de `dart:mirrors` que pierde compatibilidad con Flutter
+- tendríamos que lidiar con otra API más, incorporarla como dependencia, etc.
+
+Para hacer scripting:
+
+- tendríamos que tirar de un parser
+- tendríamos que impactar la performance con parsing en runtime
+- tendríamos que:
+   - o tener bridges, que si no hay `dart:mirrors` no es posible
+   - o usar otra historieta que corra en paralelo, como creo que promete `quickjs` o `esprima` o otros varios.
+   - o empezar desde aquí: un par de functional trees.
+
+La reflexión es tentadora, pero si no hay compatibilidad con flutter, no tiene sentido, porque flutter es la razón gorda de dart.
+
+Y el scripting es una batalla épica que probablemente acabaría perdiendo porque es muy vasto, y probablemente haya algo pero todavía no hemos dado con ello, porque lo que dicen que hay, tal como lo han explicado que funciona, no es lo mismo, no interesa tanto. No interesa instalar un engine de js externo si luego no deja acceder a absolutamente todas las cosas de Dart. Y en este paso, cae la reflection, que está vetada.
+
+Así que en resumidas cuentas, no es una necesidad, pero sí es interesante hacer dinámicas estas 3 operaciones:
+
+- coger
+- dejar
+- ejecutar
+
+Y las otras soluciones son muy desproporcionadas.
+
+Esta clase resuelve eso.
+
+### Test de FunctionalTree
+
+El test es este:
+
+```dart
+#!/usr/bin/env dart
+
+import './FunctionalTree.dart';
+
+void main(List<String> args) {
+  test();
+}
+
+dynamic boj = FunctionalTree({
+  "version": "1.0.0",
+  "gui": {
+    "start": () {
+      print("boj.gui.start");
+    },
+  },
+  "cli": {
+    "mask": {},
+    "whatever": (dynamic a, dynamic b) {
+      print("boj.cli.whatever");
+      print(a + b);
+      return a + b;
+    },
+  },
+});
+
+void test() {
+  // Funcionaría sin el hack noSuchMethod:
+  boj["gui"]["start"]();
+  boj["cli"]["whatever"](5, 10);
+  // Funciona, pero no funcionaría sin el hack noSuchMethod:
+  boj.gui.start();
+  boj.cli.whatever(5, 16);
+  // Get:
+  dynamic w1 = boj.get(["cli", "whatever"]);
+  if (w1 is! Function) {
+    throw Exception("var cli.whatever should be a function");
+  }
+  // Set:
+  boj.set(["cli", "whatever"], 900);
+  if (boj.cli.whatever != 900) {
+    throw Exception("var cli.whatever should be 900");
+  }
+  // Init:
+  boj.init(["cli", "whatever"], 899);
+  if (boj.cli.whatever != 900) {
+    throw Exception("var cli.whatever should still be 900");
+  }
+  // Delete:
+  boj.delete(["cli", "whatever"]);
+  // Has:
+  bool stillExists = boj.has(["cli", "whatever"]);
+  if (stillExists) {
+    throw Exception("var cli.whatever should not exist");
+  }
+  // List:
+  dynamic w2 = boj.list(["cli"]);
+  if(w2[0] != "mask") {
+    throw Exception("var cli should have mask as first and unique key");
+  }
+  print(w2);
+
+}
+```
+
+### Implementación final de FunctionalTree
+
+La implementación actual es esta, que la dejamos en `FunctionalTree.dart`:
+
+```dart
+class TreeWrapper {
+
+  final Map _root;
+
+  TreeWrapper(this._root);
+
+}
+
+class AccessibleTree extends TreeWrapper {
+
+  AccessibleTree(super.root);
+
+  dynamic get(List path) {
+    Map current = _root;
+    int i = 0;
+    for (i = 0; i < path.length; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key)) {
+        return null;
+      }
+      var value = current[key];
+      if (i == path.length - 1) {
+        if (value is Map) {
+          return FunctionalTree(value);
+        }
+        return value;
+      }
+      if (value is! Map) {
+        return null;
+      }
+      current = value;
+    }
+    return null;
+  }
+
+  void set(List path, dynamic value) {
+    Map current = _root;
+    int i = 0;
+    for (i = 0; i < path.length - 1; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key) || current[key] is! Map) {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+    Object lastKey = path[path.length - 1];
+    current[lastKey] = value;
+  }
+
+  void init(List path, dynamic value) {
+    Map current = _root;
+    int i = 0;
+    for (i = 0; i < path.length - 1; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key) || current[key] is! Map) {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+    Object lastKey = path[path.length - 1];
+    if (!current.containsKey(lastKey)) {
+      current[lastKey] = value;
+    }
+  }
+
+  void delete(List path) {
+    Map current = _root;
+    int i = 0;
+    for (i = 0; i < path.length - 1; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key)) {
+        return;
+      }
+      var value = current[key];
+      if (value is! Map) {
+        return;
+      }
+      current = value;
+    }
+    Object lastKey = path[path.length - 1];
+    current.remove(lastKey);
+  }
+
+  bool has(List path) {
+    Map current = _root;
+    int i = 0;
+    for (i = 0; i < path.length; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key)) {
+        return false;
+      }
+      var value = current[key];
+      if (i == path.length - 1) {
+        return true;
+      }
+      if (value is! Map) {
+        return false;
+      }
+      current = value;
+    }
+    return false;
+  }
+
+  dynamic list(List path) {
+    var value = get(path);
+    if (value is FunctionalTree) {
+      return value._root.keys.toList();
+    }
+    if (value is Map) {
+      return value.keys.toList();
+    }
+    return null;
+  }
+
+}
+
+class FunctionalTree extends AccessibleTree {
+
+  FunctionalTree(super.root);
+
+  dynamic operator [](Object key) {
+    var value = _root[key];
+    if (value is Map) {
+      return FunctionalTree(value);
+    }
+    return value;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    String name = invocation.memberName.toString();
+    name = name.substring(8, name.length - 2);
+    if (invocation.isGetter) {
+      var value = _root[name];
+      if (value is Map) {
+        return FunctionalTree(value);
+      }
+      return value;
+    }
+    if (invocation.isMethod) {
+      var callback = _root[name];
+
+      if (callback is Function) {
+        return Function.apply(callback, invocation.positionalArguments);
+      }
+    }
+    return super.noSuchMethod(invocation);
+  }
+
+}
+```
 
 # JSON parse y stringify
 
