@@ -1,62 +1,95 @@
 #!/usr/bin/env dart
 
-import './FunctionalTree.dart';
+import "../lib/usables/Platformer.dart";
+import "../lib/usables/FunctionalTree.dart";
+import "../lib/usables/Inspector.dart";
+import "../lib/usables/commands/Environmentable.dart";
+import "boj.FunctionalTree.test.dart";
+import 'package:flutter_js/flutter_js.dart';
 
 void main(List<String> args) {
-  test();
+  Platformer.global.specify("cli");
+  dynamic api = FunctionalTree({
+    "domain": {
+      "specific": {
+        "command": Environmentable({
+          "any": (Map context, List<String> envs) {
+            print("Command from any");
+            print(context);
+            print(envs);
+            print(" ");
+          },
+          "gui": (Map context, List<String> envs) {
+            print("Command from gui");
+            print(context);
+            print(envs);
+            print(" ");
+          },
+          "nativeGui": (Map context, List<String> envs) {
+            print("Command from nativeGui");
+            print(context);
+            print(envs);
+            print(" ");
+          },
+          "os": (Map context, List<String> envs) {
+            print("Command from os");
+            print(context);
+            print(envs);
+            print(" ");
+          },
+          "server": (Map context, List<String> envs) {
+            print("Command from server");
+            print(context);
+            print(envs);
+            print(" ");
+          },
+          "cli": (Map context, List<String> envs) {
+            print("Command from cli");
+            print(context);
+            print(envs);
+            print(" ");
+          },
+          "web": (Map context, List<String> envs) {
+            print("Command from web");
+            print(context);
+            print(envs);
+            print(" ");
+          }
+        })
+      }
+    }
+  });
+  Inspector.inspect(api.domain.specific.command);
+  Inspector.inspect(api.domain.specific.command.run);
+  // @TODO: hacer un benchmarking de acceso directo por Map y acceso por noSuchMethod hack:
+  // Benchmark 1 (acceso dinámico)
+  DateTime start1 = DateTime.now();
+
+  for(int i = 0; i < 5000; i++) {
+    api.domain.specific.command.run({
+      "message": "whatever",
+      "path": [1,2,300,"what"],
+    }, "nativeGui");
+  }
+
+  DateTime end1 = DateTime.now();
+  Duration diff1 = end1.difference(start1);
+
+  // Benchmark 2 (acceso por Map)
+
+  DateTime start2 = DateTime.now();
+
+  for(int i = 0; i < 5000; i++) {
+    api["domain"]["specific"]["command"].run({
+      "message": "whatever",
+      "path": [1,2,300,"what"],
+    }, "nativeGui");
+  }
+
+  DateTime end2 = DateTime.now();
+  Duration diff2 = end2.difference(start2);
+
+  print("Dynamic access time: " + (diff1.inMicroseconds/1000).toString() + " ms");
+  print("Map access time: " + (diff2.inMicroseconds/1000).toString() + " ms");
 }
 
-dynamic boj = FunctionalTree({
-  "version": "1.0.0",
-  "gui": {
-    "start": () {
-      print("boj.gui.start");
-    },
-  },
-  "cli": {
-    "mask": {},
-    "whatever": (dynamic a, dynamic b) {
-      print("boj.cli.whatever");
-      print(a + b);
-      return a + b;
-    },
-  },
-});
-
-void test() {
-  // Funcionaría sin el hack noSuchMethod:
-  boj["gui"]["start"]();
-  boj["cli"]["whatever"](5, 10);
-  // Funciona, pero no funcionaría sin el hack noSuchMethod:
-  boj.gui.start();
-  boj.cli.whatever(5, 16);
-  // Get:
-  dynamic w1 = boj.get(["cli", "whatever"]);
-  if (w1 is! Function) {
-    throw Exception("var cli.whatever should be a function");
-  }
-  // Set:
-  boj.set(["cli", "whatever"], 900);
-  if (boj.cli.whatever != 900) {
-    throw Exception("var cli.whatever should be 900");
-  }
-  // Init:
-  boj.init(["cli", "whatever"], 899);
-  if (boj.cli.whatever != 900) {
-    throw Exception("var cli.whatever should still be 900");
-  }
-  // Delete:
-  boj.delete(["cli", "whatever"]);
-  // Has:
-  bool stillExists = boj.has(["cli", "whatever"]);
-  if (stillExists) {
-    throw Exception("var cli.whatever should not exist");
-  }
-  // List:
-  dynamic w2 = boj.list(["cli"]);
-  if(w2[0] != "mask") {
-    throw Exception("var cli should have mask as first and unique key");
-  }
-  print(w2);
-
-}

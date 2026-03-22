@@ -1,1 +1,0 @@
-Linea de comandos con endpoints dinámicos basados en JSON.

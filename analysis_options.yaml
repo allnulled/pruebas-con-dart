@@ -12,6 +12,8 @@ analyzer:
     avoid_print: ignore
     non_constant_identifier_names: ignore
     file_names: ignore
+    dead_code: ignore
+    unused_label: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

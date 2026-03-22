@@ -1,1 +1,0 @@
-Rutas con endpoints dinámicos basados en JSON.

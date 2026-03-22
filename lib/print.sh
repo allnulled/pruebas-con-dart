@@ -1,21 +1,23 @@
 print_tree_files() {
   local dir="$1"
-  local last_file=""
+  local f=""
+
   for f in "$dir"/*; do
-    [ ! -e "$f" ] && continue  # por si no hay nada
+    [ ! -e "$f" ] && continue
     [ "$f" = "./tree.txt" ] && continue
     [ "$f" = "./print.sh" ] && continue
-    last_file="$(basename "$f")"
-    # Omitir ficheros
+
     if [ -d "$f" ]; then
       print_tree_files "$f"
     elif [ -f "$f" ]; then
-      case $last_file in main.dart|BojFramework.dart|BojCommandLineInterface.dart)
-          ;;  # Si coincide, deja que continue con el resto del código
+      case "$f" in
+        ./main.dart|./usables/*.dart|./usables/commands/*.dart)
+          ;;
         *)
-          continue  # Ignora todo lo que no coincida
+          continue
           ;;
       esac
+
       echo ""
       echo "===== $f ====="
       cat "$f"

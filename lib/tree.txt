@@ -1,88 +1,517 @@
 
 ===== ./main.dart =====
-import 'package:flutter/material.dart';
-import 'toolkit/boj/BojFramework.dart';
-
-final BojFramework boj = BojFramework.global;
+import "package:flutter/material.dart";
 
 void main() {
-  boj.debug.inspect(boj);
-  boj.debug.inspect(boj.utils.getVersion());
-  boj.debug.inspect(boj.utils.boj);
-  boj.debug.inspect(boj.widgets.Box);
-  boj.gui.start([MyApp()]);
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+  MyApp({super.key});
+
+  late MaterialApp app;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    app = MaterialApp(
       home: Scaffold(
         body: Column(
           children: [
-            Text("Hello, from Boj!")
-              .fontSize(12)
-              .paddingAll(0),
-            boj.widgets.ControlForLine(content: "Whatever"),
+            Text("Hello, from custom app!"),
+            Text("Hello, from custom app!"),
+            Text("Hello, from custom app!"),
           ],
         ),
       ),
     );
-  }
-}
-
-
-===== ./toolkit/boj/api/BojCommandLineInterface.dart =====
-import 'package:fluttagenda/toolkit/boj/BojFramework.dart';
-
-class BojCommandLineInterface {
-
-  final BojFramework boj;
-  
-  BojCommandLineInterface(this.boj);
-
-  void start(List <String> args) {
-    print(args);
+    return app;
   }
 
 }
 
-===== ./toolkit/boj/BojFramework.dart =====
-import "./api/BojDebug.dart";
-import "./api/BojUtils.dart";
-import "./api/BojWidgets.dart";
-import "./api/BojCommandLineInterface.dart";
-import "./api/BojServerInterface.dart";
-import "./api/BojGraphicalUserInterface.dart";
-import "./api/BojTheme.dart";
+===== ./usables/commands/Environmentable.dart =====
+import "../Platformer.dart";
 
-// Exportar extensiones:
-export "extensions/StyleExtensions.dart";
+class Parameters {
 
-class BojFramework {
+}
+
+class Environmentable {
   
-  final String version = "1.0.0";
+  Map commands;
 
-  late BojUtils utils;
-  late BojDebug debug;
-  late BojWidgets widgets;
-  late BojGraphicalUserInterface gui;
-  late BojCommandLineInterface cli;
-  late BojServerInterface server;
-  late BojTheme theme;
+  Environmentable(this.commands);
 
-  BojFramework() {
-    utils = BojUtils(this);
-    debug = BojDebug(this);
-    widgets = BojWidgets(this);
-    gui = BojGraphicalUserInterface(this);
-    cli = BojCommandLineInterface(this);
-    server = BojServerInterface(this);
-    theme = BojTheme(this);
+  void run(Map args, [String? platformerEnv]) {
+    List<String> matchableEnvs = Platformer.getImplicationsFor(platformerEnv ?? Platformer.global.env);
+    for (int i = 0; i < matchableEnvs.length; i++) {
+      String env = matchableEnvs[i];
+      if(commands.containsKey(env)) {
+        Function callback = commands[env]!;
+        Function.apply(callback, [args, matchableEnvs]);
+      }
+    }
   }
 
-  static final BojFramework global = BojFramework();
+}
+
+===== ./usables/export.dart =====
+export "Platformer.dart";
+export "Inspector.dart";
+export "ProgramArguments.dart";
+export "FunctionalTree.dart";
+
+export "Starter.4any.dart"
+  if(dart.library.io) "EnvironmentForCli.dart"
+  if(dart.library.ui) "EnvironmentForGui.dart"
+  if(dart.library.html) "EnvironmentForGui.dart";
+
+===== ./usables/FunctionalTree.dart =====
+class TreeWrapper {
+
+  final Map root;
+
+  TreeWrapper(this.root);
+
+}
+
+class AccessibleTree extends TreeWrapper {
+
+  AccessibleTree(super.root);
+
+  dynamic get(List path) {
+    Map current = root;
+    int i = 0;
+    for (i = 0; i < path.length; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key)) {
+        return null;
+      }
+      var value = current[key];
+      if (i == path.length - 1) {
+        if (value is Map) {
+          return FunctionalTree(value);
+        }
+        return value;
+      }
+      if (value is! Map) {
+        return null;
+      }
+      current = value;
+    }
+    return null;
+  }
+
+  void set(List path, dynamic value) {
+    Map current = root;
+    int i = 0;
+    for (i = 0; i < path.length - 1; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key) || current[key] is! Map) {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+    Object lastKey = path[path.length - 1];
+    current[lastKey] = value;
+  }
+
+  void assign(List path, Map values) {
+    Map current = root;
+    int i = 0;
+    for (i = 0; i < path.length - 1; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key) || current[key] is! Map) {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+    Object lastKey = path[path.length - 1];
+    current[lastKey].addAll(values);
+  }
+
+  void init(List path, dynamic value) {
+    Map current = root;
+    int i = 0;
+    for (i = 0; i < path.length - 1; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key) || current[key] is! Map) {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+    Object lastKey = path[path.length - 1];
+    if (!current.containsKey(lastKey)) {
+      current[lastKey] = value;
+    }
+  }
+
+  void delete(List path) {
+    Map current = root;
+    int i = 0;
+    for (i = 0; i < path.length - 1; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key)) {
+        return;
+      }
+      var value = current[key];
+      if (value is! Map) {
+        return;
+      }
+      current = value;
+    }
+    Object lastKey = path[path.length - 1];
+    current.remove(lastKey);
+  }
+
+  bool has(List path) {
+    Map current = root;
+    int i = 0;
+    for (i = 0; i < path.length; i++) {
+      Object key = path[i];
+      if (!current.containsKey(key)) {
+        return false;
+      }
+      var value = current[key];
+      if (i == path.length - 1) {
+        return true;
+      }
+      if (value is! Map) {
+        return false;
+      }
+      current = value;
+    }
+    return false;
+  }
+
+  dynamic list(List path) {
+    var value = get(path);
+    if (value is FunctionalTree) {
+      return value.root.keys.toList();
+    }
+    if (value is Map) {
+      return value.keys.toList();
+    }
+    return null;
+  }
+
+}
+
+class FunctionalTree extends AccessibleTree {
+
+  FunctionalTree(super.root);
+
+  dynamic operator [](Object key) {
+    var value = root[key];
+    if (value is Map) {
+      return FunctionalTree(value);
+    }
+    return value;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    String name = invocation.memberName.toString();
+    name = name.substring(8, name.length - 2);
+    if (invocation.isGetter) {
+      var value = root[name];
+      if (value is Map) {
+        return FunctionalTree(value);
+      }
+      return value;
+    }
+    if (invocation.isMethod) {
+      var callback = root[name];
+
+      if (callback is Function) {
+        return Function.apply(callback, invocation.positionalArguments);
+      }
+    }
+    return super.noSuchMethod(invocation);
+  }
+
+}
+
+===== ./usables/Inspector.dart =====
+class Inspector {
+
+  Inspector();
+  
+  /// Inspecciona cualquier objeto, clase, mapa o lista
+  void introspect(dynamic value, {int depth = 2, int indent = 0}) {
+    final pad = ' ' * indent;
+    if (value == null) {
+      print('${pad}null');
+      return;
+    }
+    // Listas
+    if (value is List) {
+      print('${pad}List [');
+      if (depth > 0) {
+        for (var v in value) {
+          introspect(v, depth: depth - 1, indent: indent + 2);
+        }
+      }
+      print('${pad}]');
+      return;
+    }
+    // Mapas
+    if (value is Map) {
+      print('${pad}Map {');
+      if (depth > 0) {
+        value.forEach((k, v) {
+          print('${pad}  $k:');
+          introspect(v, depth: depth - 1, indent: indent + 4);
+        });
+      }
+      print('${pad}}');
+      return;
+    }
+    // Objetos
+    try {
+      final mirror = value.runtimeType;
+      print('${pad}${mirror.toString()} {');
+      if (depth > 0) {
+        final props = value is Object
+            ? value.toString() // fallback
+            : value;
+        print('${pad}  $props');
+      }
+      print('${pad}}');
+    } catch (e) {
+      print('${pad}$value');
+    }
+  }
+
+  static Inspector global = Inspector();
+
+  static void inspect(Object x) {
+    return global.introspect(x);
+  }
+
+}
+
+===== ./usables/Platformer.dart =====
+class Platformer {
+
+  static const bool hasIo = bool.fromEnvironment("dart.library.io");
+  static const bool hasHtml = bool.fromEnvironment("dart.library.html");
+  static const bool hasUi = bool.fromEnvironment("dart.library.ui");
+  static const bool isWeb = hasHtml;
+  static const bool isOs = hasIo;
+  static const bool isNativeGui = hasUi;
+  static const bool isGui = hasHtml || hasUi;
+  static const Map<String,List<String>> allImplications = {
+    "none": [],
+    "any": ["any","os","cli","server","gui","nativeGui","web"],
+    "os": ["any","os"],
+    "cli": ["any","os","cli"],
+    "server": ["any","os","server"],
+    "gui": ["any","gui"],
+    "nativeGui": ["any","os","gui","nativeGui"],
+    "web": ["any","gui","web"],
+  };
+  static List<String> getImplicationsFor(String env) {
+    if(!allImplications.containsKey(env)) {
+      throw Exception("Environment id «$env» not identified on «Platformer.getImplicationsFor»");
+    }
+    List<String> carriedImplications = allImplications[env]!;
+    return carriedImplications;
+  }
+  static List<String> getImplications() {
+    return getImplicationsFor(Platformer.global.env);
+  }
+  String env = hasIo ? "cli" : hasHtml ? "web" : hasUi ? "nativeGui" : "none";
+  void specify(String env) {
+    if(!["cli","server"].contains(env)) {
+      throw Exception("Environment id «$env» not identified because there is only «cli» and «server» available on «Platformer.specify»");
+    }
+    env = env;
+  }
+  Platformer(String? env) {
+    if(env != null) {
+      this.env = env;
+    }
+  }
+  static Platformer global = Platformer(null);
+}
+
+===== ./usables/ProgramArguments.dart =====
+class ProgramArguments {
+
+  static Map compile(List<String> args) {
+    Map argc = {};
+    List positional = [];
+    argc["_"] = positional;
+    int i = 0;
+    while (i < args.length) {
+      String arg = args[i];
+      bool isFlag = arg.startsWith("--");
+      if (isFlag == false) {
+        positional.add(arg);
+        i = i + 1;
+        continue;
+      }
+      String key = arg.substring(2);
+      int j = i + 1;
+      List values = [];
+      while (j < args.length) {
+        String next = args[j];
+        bool nextIsFlag = next.startsWith("--");
+        if (nextIsFlag) {
+          break;
+        }
+        values.add(next);
+        j = j + 1;
+      }
+      if (values.isEmpty) {
+        argc[key] = true;
+      } else if (values.length == 1) {
+        String v = values[0];
+        int? asInt = int.tryParse(v);
+        double? asDouble = double.tryParse(v);
+        if (asInt != null) {
+          argc[key] = asInt;
+        } else if (asDouble != null) {
+          argc[key] = asDouble;
+        } else {
+          argc[key] = v;
+        }
+      } else {
+        argc[key] = values;
+      }
+      i = j;
+    }
+    return argc;
+  }
+
+}
+
+
+===== ./usables/SimpleServer.dart =====
+import 'dart:io';
+import 'dart:convert';
+
+class SimpleServer {
+
+  static Future start(Map config) async {
+    String host = config["host"] ?? "0.0.0.0";
+    int port = config["port"] ?? 3000;
+
+    HttpServer server = await HttpServer.bind(host, port);
+    print("Listening on http://$host:$port");
+
+    await for (HttpRequest req in server) {
+      await handleRequest(req);
+    }
+  }
+
+  static Future handleRequest(HttpRequest req) async {
+
+    String method = req.method;
+    Uri uri = req.uri;
+
+    String path = uri.path;
+
+    Map query = {};
+    Map queryRaw = uri.queryParameters;
+
+    List qkeys = queryRaw.keys.toList();
+    for(int i=0;i<qkeys.length;i++){
+      String k = qkeys[i];
+      query[k] = queryRaw[k];
+    }
+
+    Object body = await parseBody(req);
+
+    Map request = {
+      "method": method,
+      "path": path,
+      "query": query,
+      "body": body
+    };
+
+    print(request);
+
+    req.response.headers.contentType = ContentType.json;
+
+    Map response = {
+      "ok": true,
+      "request": request
+    };
+
+    req.response.write(jsonEncode(response));
+    await req.response.close();
+  }
+
+  static Future parseBody(HttpRequest req) async {
+
+    if(req.method == "GET" || req.method == "HEAD"){
+      return null;
+    }
+
+    String raw = await utf8.decoder.bind(req).join();
+
+    if(raw.isEmpty){
+      return null;
+    }
+
+    String contentType = req.headers.contentType?.mimeType ?? "";
+
+    if(contentType == "application/json"){
+      try {
+        return jsonDecode(raw);
+      } catch(e) {
+        return raw;
+      }
+    }
+
+    return raw;
+  }
+
+}
+
+Future main(List<String> args) async {
+  await SimpleServer.start({
+    "host": "0.0.0.0",
+    "port": 3000
+  });
+}
+
+===== ./usables/Starter.4any.dart =====
+abstract class StarterForAny {
+
+  void start() {
+    throw Exception("Starter must override method start");
+  }
+
+}
+
+===== ./usables/Starter.4cli.dart =====
+import "Starter.4any.dart";
+
+class Starter implements StarterForAny {
+
+  Starter();
+
+  @override
+  void start() {
+    print("Starter for CLI");
+  }
+
+}
+
+===== ./usables/Starter.4gui.dart =====
+import "Starter.4any.dart";
+
+class Starter implements StarterForAny {
+
+  Starter();
+
+  @override
+  void start() {
+    print("Starter for GUI");
+  }
 
 }

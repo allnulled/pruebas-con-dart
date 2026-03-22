@@ -1,1 +1,0 @@
-Servidor con endpoints dinámicos basados en JSON.

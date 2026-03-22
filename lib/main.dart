@@ -1,31 +1,29 @@
-import 'package:flutter/material.dart';
-import 'toolkit/boj/BojFramework.dart';
-
-late BojFramework boj;
+import "package:flutter/material.dart";
 
 void main() {
-  boj = BojFramework("gui");
-  boj.debug.inspect(boj);
-  boj.debug.inspect(boj.utils.getVersion());
-  boj.debug.inspect(boj.utils.boj);
-  boj.debug.inspect(boj.widgets.Box);
-  boj.gui.start([MyApp()]);
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+  MyApp({super.key});
+
+  late MaterialApp app;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    app = MaterialApp(
       home: Scaffold(
         body: Column(
           children: [
-            Text("Hello, from Boj!"),
-            boj.widgets.ControlForLine(content: "Whatever"),
+            Text("Hello, from custom app!"),
+            Text("Hello, from custom app!"),
+            Text("Hello, from custom app!"),
           ],
         ),
       ),
     );
+    return app;
   }
+
 }

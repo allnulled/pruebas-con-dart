@@ -1,10 +1,6 @@
-import "../BojFramework.dart";
+class Inspector {
 
-class BojDebug {
-
-  final BojFramework boj;
-
-  BojDebug(BojFramework this.boj);
+  Inspector();
   
   /// Inspecciona cualquier objeto, clase, mapa o lista
   void inspect(dynamic value, {int depth = 2, int indent = 0}) {

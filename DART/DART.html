@@ -148,6 +148,12 @@
 <li><a href="#recursos-relacionados-con-dart">Recursos relacionados con Dart</a></li>
 </ul>
 </li>
+<li><a href="#crear-un-sistema-de-comandos-polientorno">Crear un sistema de comandos polientorno</a>
+<ul>
+<li><a href="#requisitos">Requisitos</a></li>
+<li><a href="#objetivos">Objetivos</a></li>
+</ul>
+</li>
 <li><a href="#clases">Clases</a>
 <ul>
 <li><a href="#propiedades-y-m%C3%A9todos">Propiedades y métodos</a></li>
@@ -216,20 +222,16 @@
 <li><a href="#paso-1-a%C3%B1adir-el-ejecutable-en-el-pubspec">Paso 1. Añadir el ejecutable en el pubspec</a></li>
 <li><a href="#paso-2-a%C3%B1adir-la-clase-del-ejecutable">Paso 2. Añadir la clase del ejecutable</a>
 <ul>
-<li><a href="#paso-21-clase-de-entrada-de-ejecutable">Paso 2.1. Clase de entrada de ejecutable</a></li>
-<li><a href="#paso-22-clase-de-l%C3%B3gica-de-ejecutable">Paso 2.2. Clase de lógica de ejecutable</a></li>
 <li><a href="#paso-3-instalar-ejecutable">Paso 3. Instalar ejecutable</a></li>
+<li><a href="#paso-4-parsear-los-argumentos">Paso 4. Parsear los argumentos</a></li>
+<li><a href="#paso-5-reinstalar-la-cli-para-actualizar-los-cambios">Paso 5. Reinstalar la CLI para actualizar los cambios</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#crear-una-l%C3%ADnea-de-comandos-con-endpoints-din%C3%A1micos">Crear una línea de comandos con endpoints dinámicos</a></li>
 <li><a href="#crear-un-servidor-simple">Crear un servidor simple</a></li>
-<li><a href="#crear-un-servidor-con-endpoints-din%C3%A1micos">Crear un servidor con endpoints dinámicos</a></li>
-<li><a href="#crear-rutas-de-aplicaci%C3%B3n-cliente-simple">Crear rutas de aplicación cliente simple</a></li>
-<li><a href="#crear-rutas-de-aplicaci%C3%B3n-cliente-con-endpoints-din%C3%A1micos">Crear rutas de aplicación cliente con endpoints dinámicos</a></li>
 <li><a href="#patr%C3%B3n-singleton-en-static-inicializado-en-el-primer-constructor">Patrón singleton en static inicializado en el primer constructor</a></li>
-<li><a href="#crear-un-switcher-funcional-multidimensional-o-%C3%A1rbol-funcional">Crear un switcher funcional multidimensional o árbol funcional</a>
+<li><a href="#crear-un-%C3%A1rbol-funcional">Crear un árbol funcional</a>
 <ul>
 <li><a href="#qu%C3%A9-necesidad">¿Qué necesidad?</a></li>
 <li><a href="#la-clase-functionaltree">La clase FunctionalTree</a></li>
@@ -270,6 +272,35 @@
 <ul>
 <li><a href="https://www.codeconvert.ai/dart-to-c++-converter">https://www.codeconvert.ai/dart-to-c++-converter</a></li>
 </ul>
+<h1 id="crear-un-sistema-de-comandos-polientorno">Crear un sistema de comandos polientorno</h1>
+<p>¿Qué significa sistema de comandos polientorno?</p>
+<p>Significa un sistema de comandos compatible con:</p>
+<ul>
+<li>entorno de línea de comandos</li>
+<li>entorno de petición de servidor http</li>
+<li>entorno de aplicación gráfica</li>
+</ul>
+<h2 id="requisitos">Requisitos</h2>
+<p>Se juntan 3 secciones anteriores:</p>
+<ul>
+<li><a href="#">Crear un árbol funcional</a>
+<ul>
+<li>nos permite dinamizar el acceso a las funciones de cada comando</li>
+<li>nos permite acceder vía cliente gráfico</li>
+</ul>
+</li>
+<li><a href="#">Crear una línea de comandos simple</a>
+<ul>
+<li>nos permite acceder vía línea de comandos</li>
+</ul>
+</li>
+<li><a href="#">Crear un servidor simple</a>
+<ul>
+<li>nos permite acceder vía servidor HTTP</li>
+</ul>
+</li>
+</ul>
+<h2 id="objetivos">Objetivos</h2>
 <h1 id="clases">Clases</h1>
 <p>En esta sección se exploran las clases en Dart.</p>
 <h2 id="propiedades-y-métodos">Propiedades y métodos</h2>
@@ -1030,6 +1061,9 @@ Builder bojExposersBuilder(BuilderOptions options) {
 <ul>
 <li>Paso 1. Añadir el ejecutable en el pubspec</li>
 <li>Paso 2. Añadir la clase del ejecutable</li>
+<li>Paso 3. Instalar ejecutable</li>
+<li>Paso 4. Parsear los argumentos</li>
+<li>Paso 5. Reinstalar la CLI para actualizar los cambios</li>
 </ul>
 <h2 id="paso-1-añadir-el-ejecutable-en-el-pubspec">Paso 1. Añadir el ejecutable en el pubspec</h2>
 <p>En el <code>pubspec</code> tiene que aparecer la ruta al ejecutable global:</p>
@@ -1038,58 +1072,207 @@ Builder bojExposersBuilder(BuilderOptions options) {
   <span class="hljs-attr">boj:</span> <span class="hljs-string">lib/toolkit/boj/binary.dart</span>
 </code></pre>
 <h2 id="paso-2-añadir-la-clase-del-ejecutable">Paso 2. Añadir la clase del ejecutable</h2>
-<p>Podría estar todo en 1 clase, pero en este ejemplo vamos a hacer 1 fichero para el binario, y otro para la clase que gestiona la lógica. Esto es para diferenciar la entrada desde línea de comandos, y la API que gestiona la lógica de la línea de comandos, y poder reaprovecharla a nivel de API también.</p>
-<p>Por eso, crearemos 2 ficheros nuevos para gestionar el ejecutable:</p>
-<ul>
-<li>Clase de entrada: <code>lib/toolkit/boj/binary.dart</code></li>
-<li>Clase de lógica: <code>lib/toolkit/boj/api/BojCommandLineInterface.dart</code></li>
-</ul>
-<h3 id="paso-21-clase-de-entrada-de-ejecutable">Paso 2.1. Clase de entrada de ejecutable</h3>
-<p>En el fichero <code>lib/toolkit/boj/binary.dart</code> algo como:</p>
+<p>En un fichero <code>bin/boj.dart</code> algo así:</p>
 <pre><code class="language-dart">#!/usr/bin/env dart
 
-<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:fluttagenda/toolkit/boj/BojFramework.dart&#x27;</span>;
-
 <span class="hljs-keyword">void</span> main(<span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt; args) {
-  BojFramework.global.cli.start(args);
-}
-</code></pre>
-<h3 id="paso-22-clase-de-lógica-de-ejecutable">Paso 2.2. Clase de lógica de ejecutable</h3>
-<p>Continuaríamos en otro fichero <code>lib/toolkit/boj/api/BojCommandLineInterface.dart</code>:</p>
-<pre><code class="language-dart"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:fluttagenda/toolkit/boj/BojFramework.dart&#x27;</span>;
-
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BojCommandLineInterface</span> </span>{
-
-  <span class="hljs-keyword">final</span> BojFramework boj;
-  
-  BojCommandLineInterface(<span class="hljs-keyword">this</span>.boj);
-
-  <span class="hljs-keyword">void</span> start(<span class="hljs-built_in">List</span> &lt;<span class="hljs-built_in">String</span>&gt; args) {
-    <span class="hljs-built_in">print</span>(args);
-  }
-
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Bienvenido al CLI&quot;</span>);
 }
 </code></pre>
 <h3 id="paso-3-instalar-ejecutable">Paso 3. Instalar ejecutable</h3>
-<p>Con esto se instala:</p>
+<p>Con esto se instala en el sistema:</p>
 <pre><code class="language-sh">dart pub global activate --<span class="hljs-built_in">source</span> path .
 </code></pre>
 <p>Le hemos dicho que se llama <code>boj</code> en el pubspec, así que podremos usarlo desde línea de comandos:</p>
-<pre><code class="language-sh">boj subc1 subc2 --flag --text=whatever --param1 t1 t2 t3 --param2=<span class="hljs-literal">false</span> --param3=200
+<pre><code class="language-sh">boj subc1 subc2 --flag --text whatever --param1 t1 t2 t3 --param3 200
 </code></pre>
-<h1 id="crear-una-línea-de-comandos-con-endpoints-dinámicos">Crear una línea de comandos con endpoints dinámicos</h1>
-<p>Linea de comandos con endpoints dinámicos basados en JSON.</p>
+<h3 id="paso-4-parsear-los-argumentos">Paso 4. Parsear los argumentos</h3>
+<p>Los últimos pasos, en tanto que una CLI, son:</p>
+<ul>
+<li>parsear los argumentos</li>
+<li>redirigir a otra API la llamada (un switch-case)</li>
+</ul>
+<p>La estrategia de parseo de argumentos a usar va a ser la típica:</p>
+<ul>
+<li>argumentos posicionales: <code>micli pos1 pos2 pos3 pos4</code></li>
+<li>argumentos nominales, con soporte para:
+<ul>
+<li>booleano: <code>--flag</code></li>
+<li>número: <code>--number 500</code></li>
+<li>texto: <code>--text Text --text &quot;texto con espacios&quot;</code></li>
+<li>array de textos: <code>--array texto1 &quot;texto 2 con espacios&quot; texto3</code></li>
+</ul>
+</li>
+</ul>
+<p>Esto lo conseguiríamos con esta clase y su método estático <code>compile</code>:</p>
+<pre><code class="language-dart">#!/usr/bin/env dart
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProgramArguments</span> </span>{
+
+  <span class="hljs-keyword">static</span> <span class="hljs-built_in">Map</span> compile(<span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt; args) {
+    <span class="hljs-built_in">Map</span> argc = {};
+    <span class="hljs-built_in">List</span> positional = [];
+    argc[<span class="hljs-string">&quot;_&quot;</span>] = positional;
+    <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (i &lt; args.length) {
+      <span class="hljs-built_in">String</span> arg = args[i];
+      <span class="hljs-built_in">bool</span> isFlag = arg.startsWith(<span class="hljs-string">&quot;--&quot;</span>);
+      <span class="hljs-keyword">if</span> (isFlag == <span class="hljs-keyword">false</span>) {
+        positional.add(arg);
+        i = i + <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">continue</span>;
+      }
+      <span class="hljs-built_in">String</span> key = arg.substring(<span class="hljs-number">2</span>);
+      <span class="hljs-built_in">int</span> j = i + <span class="hljs-number">1</span>;
+      <span class="hljs-built_in">List</span> values = [];
+      <span class="hljs-keyword">while</span> (j &lt; args.length) {
+        <span class="hljs-built_in">String</span> next = args[j];
+        <span class="hljs-built_in">bool</span> nextIsFlag = next.startsWith(<span class="hljs-string">&quot;--&quot;</span>);
+        <span class="hljs-keyword">if</span> (nextIsFlag) {
+          <span class="hljs-keyword">break</span>;
+        }
+        values.add(next);
+        j = j + <span class="hljs-number">1</span>;
+      }
+      <span class="hljs-keyword">if</span> (values.isEmpty) {
+        argc[key] = <span class="hljs-keyword">true</span>;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (values.length == <span class="hljs-number">1</span>) {
+        <span class="hljs-built_in">String</span> v = values[<span class="hljs-number">0</span>];
+        <span class="hljs-built_in">int?</span> asInt = <span class="hljs-built_in">int</span>.tryParse(v);
+        <span class="hljs-built_in">double?</span> asDouble = <span class="hljs-built_in">double</span>.tryParse(v);
+        <span class="hljs-keyword">if</span> (asInt != <span class="hljs-keyword">null</span>) {
+          argc[key] = asInt;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (asDouble != <span class="hljs-keyword">null</span>) {
+          argc[key] = asDouble;
+        } <span class="hljs-keyword">else</span> {
+          argc[key] = v;
+        }
+      } <span class="hljs-keyword">else</span> {
+        argc[key] = values;
+      }
+      i = j;
+    }
+    <span class="hljs-keyword">return</span> argc;
+  }
+
+}
+
+<span class="hljs-keyword">void</span> main(<span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt; args) {
+  <span class="hljs-built_in">Map</span> argc = ProgramArguments.compile(args);
+  <span class="hljs-built_in">print</span>(argc);
+}
+</code></pre>
+<h3 id="paso-5-reinstalar-la-cli-para-actualizar-los-cambios">Paso 5. Reinstalar la CLI para actualizar los cambios</h3>
+<p>Si ejecutas directamente el script, no hay problema, y los cambios se actualizan automáticamente.</p>
+<p>Pero si compilas e instalas global a través de dart, hace cosas raras (al menos, de momento son cosas raras).</p>
+<p>Tengo este script para reinstalarlo, pero todavía es insuficiente (<code>fluttagenda</code> es el nombre del proyecto de prueba):</p>
+<pre><code class="language-sh">dart pub global deactivate fluttagenda
+dart pub cache gc
+dart build cli
+dart pub global activate --<span class="hljs-built_in">source</span> path . --overwrite
+</code></pre>
+<p>Y no sirve. Hay que seguir escarbando por este lado.</p>
+<p>Mientras tanto, uso el binario desde línea de comandos directamente, en lugar del global instalado por dart, que no obedece a los cambios (no sé por qué).</p>
 <h1 id="crear-un-servidor-simple">Crear un servidor simple</h1>
-<p>Servidor con endpoints dinámicos basados en JSON.</p>
-<h1 id="crear-un-servidor-con-endpoints-dinámicos">Crear un servidor con endpoints dinámicos</h1>
-<p>Servidor con endpoints dinámicos basados en JSON.</p>
-<h1 id="crear-rutas-de-aplicación-cliente-simple">Crear rutas de aplicación cliente simple</h1>
-<p>Rutas con endpoints dinámicos basados en JSON.</p>
-<h1 id="crear-rutas-de-aplicación-cliente-con-endpoints-dinámicos">Crear rutas de aplicación cliente con endpoints dinámicos</h1>
-<p>Rutas con endpoints dinámicos basados en JSON.</p>
+<p>Para crear un servidor HTTP simple con Dart, primero hay que definir simple.</p>
+<p>Un servidor HTTP simple sería uno que:</p>
+<ul>
+<li>parsea parámetros de la URL
+<ul>
+<li>los del path</li>
+<li>los del query</li>
+</ul>
+</li>
+<li>parsea parámetros del body
+<ul>
+<li>solo tipo JSON</li>
+</ul>
+</li>
+<li>permite definir el handler de peticiones</li>
+</ul>
+<p>Con esta abstracción, ya podemos abarcar los casos de HTTP más simples.</p>
+<pre><code class="language-dart">#!/usr/bin/env dart
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;dart:io&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;dart:convert&#x27;</span> <span class="hljs-keyword">show</span> jsonDecode, jsonEncode, utf8;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SimpleServer</span> </span>{
+
+  <span class="hljs-keyword">final</span> Future handler;
+
+  SimpleServer(<span class="hljs-keyword">this</span>.handler);
+
+  <span class="hljs-keyword">static</span> Future start(<span class="hljs-built_in">Map</span> config) <span class="hljs-keyword">async</span> {
+    <span class="hljs-built_in">String</span> host = config[<span class="hljs-string">&quot;host&quot;</span>] ?? <span class="hljs-string">&quot;0.0.0.0&quot;</span>;
+    <span class="hljs-built_in">int</span> port = config[<span class="hljs-string">&quot;port&quot;</span>] ?? <span class="hljs-number">3000</span>;
+    HttpServer server = <span class="hljs-keyword">await</span> HttpServer.bind(host, port);
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;[*] Listening on http://<span class="hljs-subst">$host</span>:<span class="hljs-subst">$port</span>&quot;</span>);
+    <span class="hljs-keyword">await</span> <span class="hljs-keyword">for</span> (HttpRequest req <span class="hljs-keyword">in</span> server) {
+      <span class="hljs-keyword">await</span> handleRequest(req);
+    }
+  }
+
+  <span class="hljs-keyword">static</span> Future handleRequest(HttpRequest req) <span class="hljs-keyword">async</span> {
+    <span class="hljs-built_in">String</span> method = req.method;
+    <span class="hljs-built_in">Uri</span> uri = req.uri;
+    <span class="hljs-built_in">String</span> path = uri.path;
+    <span class="hljs-built_in">Map</span> query = {};
+    <span class="hljs-built_in">Map</span> queryRaw = uri.queryParameters;
+    <span class="hljs-built_in">List</span> qkeys = queryRaw.keys.toList();
+    <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> i=<span class="hljs-number">0</span>;i&lt;qkeys.length;i++){
+      <span class="hljs-built_in">String</span> k = qkeys[i];
+      query[k] = queryRaw[k];
+    }
+    <span class="hljs-built_in">Object?</span> body = <span class="hljs-keyword">await</span> parseBody(req);
+    <span class="hljs-built_in">Map</span> action = {
+      <span class="hljs-string">&quot;method&quot;</span>: method,
+      <span class="hljs-string">&quot;path&quot;</span>: path.split(<span class="hljs-string">&quot;/&quot;</span>).where((<span class="hljs-built_in">String</span> <span class="hljs-keyword">part</span>) =&gt; <span class="hljs-keyword">part</span> != <span class="hljs-string">&quot;&quot;</span>).toList(),
+      <span class="hljs-string">&quot;query&quot;</span>: query,
+      <span class="hljs-string">&quot;body&quot;</span>: body
+    };
+    <span class="hljs-built_in">print</span>(action);
+    req.response.headers.contentType = ContentType.json;
+    <span class="hljs-built_in">Map</span> answer = {
+      <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-string">&quot;ok&quot;</span>,
+      <span class="hljs-string">&quot;in&quot;</span>: action,
+      <span class="hljs-string">&quot;out&quot;</span>: <span class="hljs-keyword">null</span>,
+    };
+    <span class="hljs-built_in">String</span> jsonAnswer = jsonEncode(answer);
+    req.response.write(jsonAnswer);
+    <span class="hljs-keyword">await</span> req.response.close();
+  }
+
+  <span class="hljs-keyword">static</span> Future parseBody(HttpRequest req) <span class="hljs-keyword">async</span> {
+    <span class="hljs-keyword">if</span>(req.method == <span class="hljs-string">&quot;GET&quot;</span> || req.method == <span class="hljs-string">&quot;HEAD&quot;</span>){
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    }
+    <span class="hljs-built_in">String</span> raw = <span class="hljs-keyword">await</span> utf8.decoder.bind(req).join();
+    <span class="hljs-keyword">if</span>(raw.isEmpty){
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    }
+    <span class="hljs-built_in">String</span> contentType = req.headers.contentType?.mimeType ?? <span class="hljs-string">&quot;&quot;</span>;
+    <span class="hljs-keyword">if</span>(contentType == <span class="hljs-string">&quot;application/json&quot;</span>){
+      <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">return</span> jsonDecode(raw);
+      } <span class="hljs-keyword">catch</span>(e) {
+        <span class="hljs-keyword">return</span> raw;
+      }
+    }
+    <span class="hljs-keyword">return</span> raw;
+  }
+
+}
+
+Future main(<span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt; args) <span class="hljs-keyword">async</span> {
+  <span class="hljs-keyword">await</span> SimpleServer.start({
+    <span class="hljs-string">&quot;host&quot;</span>: <span class="hljs-string">&quot;0.0.0.0&quot;</span>,
+    <span class="hljs-string">&quot;port&quot;</span>: <span class="hljs-number">3000</span>
+  });
+}
+</code></pre>
 <h1 id="patrón-singleton-en-static-inicializado-en-el-primer-constructor">Patrón singleton en static inicializado en el primer constructor</h1>
 <p>Este patrón es para que:</p>
-<h1 id="crear-un-switcher-funcional-multidimensional-o-árbol-funcional">Crear un switcher funcional multidimensional o árbol funcional</h1>
+<h1 id="crear-un-árbol-funcional">Crear un árbol funcional</h1>
 <h2 id="qué-necesidad">¿Qué necesidad?</h2>
 <p>La necesidad del switcher funcional multidimensional o árbol funcional es:</p>
 <blockquote>

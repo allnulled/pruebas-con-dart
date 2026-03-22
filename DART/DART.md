@@ -6,6 +6,9 @@ Chuleta para el lenguaje de Dart.
 
  - [Recursos](#recursos)
     - [Recursos relacionados con Dart](#recursos-relacionados-con-dart)
+ - [Crear un sistema de comandos polientorno](#crear-un-sistema-de-comandos-polientorno)
+    - [Requisitos](#requisitos)
+    - [Objetivos](#objetivos)
  - [Clases](#clases)
     - [Propiedades y métodos](#propiedades-y-métodos)
     - [Herencia simple](#herencia-simple)
@@ -48,16 +51,12 @@ Chuleta para el lenguaje de Dart.
  - [Crear una línea de comandos simple](#crear-una-línea-de-comandos-simple)
     - [Paso 1. Añadir el ejecutable en el pubspec](#paso-1-añadir-el-ejecutable-en-el-pubspec)
     - [Paso 2. Añadir la clase del ejecutable](#paso-2-añadir-la-clase-del-ejecutable)
-       - [Paso 2.1. Clase de entrada de ejecutable](#paso-21-clase-de-entrada-de-ejecutable)
-       - [Paso 2.2. Clase de lógica de ejecutable](#paso-22-clase-de-lógica-de-ejecutable)
        - [Paso 3. Instalar ejecutable](#paso-3-instalar-ejecutable)
- - [Crear una línea de comandos con endpoints dinámicos](#crear-una-línea-de-comandos-con-endpoints-dinámicos)
+       - [Paso 4. Parsear los argumentos](#paso-4-parsear-los-argumentos)
+       - [Paso 5. Reinstalar la CLI para actualizar los cambios](#paso-5-reinstalar-la-cli-para-actualizar-los-cambios)
  - [Crear un servidor simple](#crear-un-servidor-simple)
- - [Crear un servidor con endpoints dinámicos](#crear-un-servidor-con-endpoints-dinámicos)
- - [Crear rutas de aplicación cliente simple](#crear-rutas-de-aplicación-cliente-simple)
- - [Crear rutas de aplicación cliente con endpoints dinámicos](#crear-rutas-de-aplicación-cliente-con-endpoints-dinámicos)
  - [Patrón singleton en static inicializado en el primer constructor](#patrón-singleton-en-static-inicializado-en-el-primer-constructor)
- - [Crear un switcher funcional multidimensional o árbol funcional](#crear-un-switcher-funcional-multidimensional-o-árbol-funcional)
+ - [Crear un árbol funcional](#crear-un-árbol-funcional)
     - [¿Qué necesidad?](#qué-necesidad)
     - [La clase FunctionalTree](#la-clase-functionaltree)
     - [Objetivo](#objetivo)
@@ -94,6 +93,35 @@ Para pasar de código Dart a JavaScript:
 Para pasar de código Dart a C++:
 
 - [https://www.codeconvert.ai/dart-to-c++-converter](https://www.codeconvert.ai/dart-to-c++-converter)
+
+#  Crear un sistema de comandos polientorno
+
+¿Qué significa sistema de comandos polientorno?
+
+Significa un sistema de comandos compatible con:
+
+- entorno de línea de comandos
+- entorno de petición de servidor http
+- entorno de aplicación gráfica
+
+## Requisitos
+
+Se juntan 3 secciones anteriores:
+
+- [Crear un árbol funcional](#)
+   - nos permite dinamizar el acceso a las funciones de cada comando
+   - nos permite acceder vía cliente gráfico
+- [Crear una línea de comandos simple](#)
+   - nos permite acceder vía línea de comandos
+- [Crear un servidor simple](#)
+   - nos permite acceder vía servidor HTTP
+
+## Objetivos
+
+
+
+
+
 
 #  Clases
 
@@ -977,6 +1005,9 @@ Para crear una línea de comandos simple con Dart, sigue los pasos que se explic
 
 - Paso 1. Añadir el ejecutable en el pubspec
 - Paso 2. Añadir la clase del ejecutable
+- Paso 3. Instalar ejecutable
+- Paso 4. Parsear los argumentos
+- Paso 5. Reinstalar la CLI para actualizar los cambios
 
 ## Paso 1. Añadir el ejecutable en el pubspec
 
@@ -990,50 +1021,19 @@ executables:
 
 ## Paso 2. Añadir la clase del ejecutable
 
-Podría estar todo en 1 clase, pero en este ejemplo vamos a hacer 1 fichero para el binario, y otro para la clase que gestiona la lógica. Esto es para diferenciar la entrada desde línea de comandos, y la API que gestiona la lógica de la línea de comandos, y poder reaprovecharla a nivel de API también.
-
-Por eso, crearemos 2 ficheros nuevos para gestionar el ejecutable:
-
-- Clase de entrada: `lib/toolkit/boj/binary.dart`
-- Clase de lógica: `lib/toolkit/boj/api/BojCommandLineInterface.dart`
-
-### Paso 2.1. Clase de entrada de ejecutable
-
-En el fichero `lib/toolkit/boj/binary.dart` algo como:
+En un fichero `bin/boj.dart` algo así:
 
 ```dart
 #!/usr/bin/env dart
 
-import 'package:fluttagenda/toolkit/boj/BojFramework.dart';
-
 void main(List<String> args) {
-  BojFramework.global.cli.start(args);
-}
-```
-
-### Paso 2.2. Clase de lógica de ejecutable
-
-Continuaríamos en otro fichero `lib/toolkit/boj/api/BojCommandLineInterface.dart`:
-
-```dart
-import 'package:fluttagenda/toolkit/boj/BojFramework.dart';
-
-class BojCommandLineInterface {
-
-  final BojFramework boj;
-  
-  BojCommandLineInterface(this.boj);
-
-  void start(List <String> args) {
-    print(args);
-  }
-
+  print("Bienvenido al CLI");
 }
 ```
 
 ### Paso 3. Instalar ejecutable
 
-Con esto se instala:
+Con esto se instala en el sistema:
 
 ```sh
 dart pub global activate --source path .
@@ -1042,34 +1042,206 @@ dart pub global activate --source path .
 Le hemos dicho que se llama `boj` en el pubspec, así que podremos usarlo desde línea de comandos:
 
 ```sh
-boj subc1 subc2 --flag --text=whatever --param1 t1 t2 t3 --param2=false --param3=200
+boj subc1 subc2 --flag --text whatever --param1 t1 t2 t3 --param3 200
 ```
 
-#  Crear una línea de comandos con endpoints dinámicos
+### Paso 4. Parsear los argumentos
 
-Linea de comandos con endpoints dinámicos basados en JSON.
+Los últimos pasos, en tanto que una CLI, son:
+
+- parsear los argumentos
+- redirigir a otra API la llamada (un switch-case)
+
+La estrategia de parseo de argumentos a usar va a ser la típica:
+
+- argumentos posicionales: `micli pos1 pos2 pos3 pos4`
+- argumentos nominales, con soporte para:
+   - booleano: `--flag`
+   - número: `--number 500`
+   - texto: `--text Text --text "texto con espacios"`
+   - array de textos: `--array texto1 "texto 2 con espacios" texto3`
+
+Esto lo conseguiríamos con esta clase y su método estático `compile`:
+
+```dart
+#!/usr/bin/env dart
+
+class ProgramArguments {
+
+  static Map compile(List<String> args) {
+    Map argc = {};
+    List positional = [];
+    argc["_"] = positional;
+    int i = 0;
+    while (i < args.length) {
+      String arg = args[i];
+      bool isFlag = arg.startsWith("--");
+      if (isFlag == false) {
+        positional.add(arg);
+        i = i + 1;
+        continue;
+      }
+      String key = arg.substring(2);
+      int j = i + 1;
+      List values = [];
+      while (j < args.length) {
+        String next = args[j];
+        bool nextIsFlag = next.startsWith("--");
+        if (nextIsFlag) {
+          break;
+        }
+        values.add(next);
+        j = j + 1;
+      }
+      if (values.isEmpty) {
+        argc[key] = true;
+      } else if (values.length == 1) {
+        String v = values[0];
+        int? asInt = int.tryParse(v);
+        double? asDouble = double.tryParse(v);
+        if (asInt != null) {
+          argc[key] = asInt;
+        } else if (asDouble != null) {
+          argc[key] = asDouble;
+        } else {
+          argc[key] = v;
+        }
+      } else {
+        argc[key] = values;
+      }
+      i = j;
+    }
+    return argc;
+  }
+
+}
+
+void main(List<String> args) {
+  Map argc = ProgramArguments.compile(args);
+  print(argc);
+}
+```
+
+### Paso 5. Reinstalar la CLI para actualizar los cambios
+
+Si ejecutas directamente el script, no hay problema, y los cambios se actualizan automáticamente.
+
+Pero si compilas e instalas global a través de dart, hace cosas raras (al menos, de momento son cosas raras).
+
+Tengo este script para reinstalarlo, pero todavía es insuficiente (`fluttagenda` es el nombre del proyecto de prueba):
+
+```sh
+dart pub global deactivate fluttagenda
+dart pub cache gc
+dart build cli
+dart pub global activate --source path . --overwrite
+```
+
+Y no sirve. Hay que seguir escarbando por este lado.
+
+Mientras tanto, uso el binario desde línea de comandos directamente, en lugar del global instalado por dart, que no obedece a los cambios (no sé por qué).
 
 #  Crear un servidor simple
 
-Servidor con endpoints dinámicos basados en JSON.
+Para crear un servidor HTTP simple con Dart, primero hay que definir simple.
 
-#  Crear un servidor con endpoints dinámicos
+Un servidor HTTP simple sería uno que:
 
-Servidor con endpoints dinámicos basados en JSON.
+- parsea parámetros de la URL
+   - los del path
+   - los del query
+- parsea parámetros del body
+   - solo tipo JSON
+- permite definir el handler de peticiones
 
-#  Crear rutas de aplicación cliente simple
+Con esta abstracción, ya podemos abarcar los casos de HTTP más simples.
 
-Rutas con endpoints dinámicos basados en JSON.
+```dart
+#!/usr/bin/env dart
 
-#  Crear rutas de aplicación cliente con endpoints dinámicos
+import 'dart:io';
+import 'dart:convert' show jsonDecode, jsonEncode, utf8;
 
-Rutas con endpoints dinámicos basados en JSON.
+class SimpleServer {
+
+  final Future handler;
+
+  SimpleServer(this.handler);
+
+  static Future start(Map config) async {
+    String host = config["host"] ?? "0.0.0.0";
+    int port = config["port"] ?? 3000;
+    HttpServer server = await HttpServer.bind(host, port);
+    print("[*] Listening on http://$host:$port");
+    await for (HttpRequest req in server) {
+      await handleRequest(req);
+    }
+  }
+
+  static Future handleRequest(HttpRequest req) async {
+    String method = req.method;
+    Uri uri = req.uri;
+    String path = uri.path;
+    Map query = {};
+    Map queryRaw = uri.queryParameters;
+    List qkeys = queryRaw.keys.toList();
+    for(int i=0;i<qkeys.length;i++){
+      String k = qkeys[i];
+      query[k] = queryRaw[k];
+    }
+    Object? body = await parseBody(req);
+    Map action = {
+      "method": method,
+      "path": path.split("/").where((String part) => part != "").toList(),
+      "query": query,
+      "body": body
+    };
+    print(action);
+    req.response.headers.contentType = ContentType.json;
+    Map answer = {
+      "status": "ok",
+      "in": action,
+      "out": null,
+    };
+    String jsonAnswer = jsonEncode(answer);
+    req.response.write(jsonAnswer);
+    await req.response.close();
+  }
+
+  static Future parseBody(HttpRequest req) async {
+    if(req.method == "GET" || req.method == "HEAD"){
+      return null;
+    }
+    String raw = await utf8.decoder.bind(req).join();
+    if(raw.isEmpty){
+      return null;
+    }
+    String contentType = req.headers.contentType?.mimeType ?? "";
+    if(contentType == "application/json"){
+      try {
+        return jsonDecode(raw);
+      } catch(e) {
+        return raw;
+      }
+    }
+    return raw;
+  }
+
+}
+
+Future main(List<String> args) async {
+  await SimpleServer.start({
+    "host": "0.0.0.0",
+    "port": 3000
+  });
+}
+```
 
 #  Patrón singleton en static inicializado en el primer constructor
 
 Este patrón es para que:
 
-#  Crear un switcher funcional multidimensional o árbol funcional
+#  Crear un árbol funcional
 
 ## ¿Qué necesidad?
 
